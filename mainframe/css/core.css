@@ -1,0 +1,56 @@
+﻿/* *
+    Document   : core
+    Created on : 5/08/2013, 14:30:00
+    Author     : Augusto Weiand <guto.weiand@gmail.com>
+    Description:
+        Estilos do núcleo do sistema
+*/
+/** 
+ *      Regras Gerais INI
+ */
+
+body {
+        margin: 0;
+        padding: 0;
+}
+
+* {
+        margin: 0;
+        padding: 0;
+}
+
+img {
+        border: none;
+}
+
+
+.fullCenter {
+        text-align: center; 
+        float: left; 
+        width: 100%;
+}
+
+.leftFloat {
+        float: left;
+        width: 50%;
+}
+
+.rightFloat {
+        float: right;
+        width: 50%;
+}
+/** 
+ *       Regras Gerais FIM
+ */
+
+/** 
+ *       Regras Principais INI
+ */
+.center {
+        margin: 0 auto;
+        width: 1000px;
+        height: auto;
+}
+/** 
+ *       Regras Principais FIM
+ */

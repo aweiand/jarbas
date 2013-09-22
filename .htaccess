@@ -1,0 +1,6 @@
+RewriteEngine on
+RewriteBase /jarbas
+
+RewriteRule ^pg/.* home.php
+
+RewriteRule ^act/.* mainframe/act.php
