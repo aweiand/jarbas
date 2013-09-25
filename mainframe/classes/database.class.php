@@ -34,13 +34,13 @@ class database {
                 if (strpos($_SERVER['SERVER_NAME'], "localhost" !== false)) {
                         $server = "localhost";
                         $database = "jarbas";
-                        $user = "root";
-                        $password = "root";
+                        $user = "postgres";
+                        $password = "postgres";
                 } else {
                         $server = "localhost";
                         $database = "jarbas";
-                        $user = "root";
-                        $password = "root";
+                        $user = "postgres";
+                        $password = "postgres";
                 }
                 $CONN = ADONewConnection('postgres');
                 $CONN->Connect($server, $user, $password, $database);

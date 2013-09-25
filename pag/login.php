@@ -1,5 +1,8 @@
+<?php
+GLOBAL $CFG;
+?>
 <div class="frm-login container ui-corner-all">
-        <form class="form-signin" action="mainframe/actions.php" method="POST">
+        <form class="form-signin" action="<?= $CFG->affix . $CFG->lib ?>/actions.php" method="POST">
                 <h2 class="form-signin-heading">Bem Vindo! Faça seu Login.</h2>
                 <div class="input-prepend">
                         <span class="add-on"><i class="icon-tag"></i></span>

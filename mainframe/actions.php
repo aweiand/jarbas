@@ -6,7 +6,7 @@ require_once "autoload.php";
 
 /*
   echo "<pre>";
-  print_r($post);
+  print_r($_POST);
   exit();
  */
 
@@ -20,22 +20,24 @@ elseif (isset($_SERVER['HTTP_REFERER'])) {
 }
 
 //##################################
-$db = new data();
-$uti = new Utils();
+$db = new database();
+$uti = new utils();
+$com = new comuns();
 //#################################
 
 /**
  * Login na seção
  */
-if (isset($post["username"]) && (isset($post['pass']))) {
+if (isset($_POST["username"]) && (isset($_POST['pass']))) {
         @session_cache_expire(180); // 2 hours
         @session_start();
-        if (!$uti->badWords($post)) {
+        if (!$uti->badWords($_POST)) {
                 return "Não Logado";
-                exit;
+                exit();
         }
 
-        $log = $db->_login($post['username'], $post['pass']);
+        $admpe = new admPessoas();
+        $log = $admpe->_login($_POST['username'], $_POST['pass']);
         if (isset($log['usuid'])) {
                 $_SESSION['usuid'] = $log['usuid'];
                 $_SESSION['usu'] = $log['usu'];
@@ -43,24 +45,26 @@ if (isset($post["username"]) && (isset($post['pass']))) {
                 $_SESSION['autenticado'] = true;
 
                 if (!$_SESSION['autenticado']) {
-                        header("Location: ../index.php?action=erroLogin");
+                        $com->_insActlog("_err-login", "login", "Erro de Login = " . $_POST['username']);
+                        header("Location: $CFG->affix/index.php?action=erroLogin");
                 } else {
-                        header("Location: ../home.php");
+                        $com->_insActlog("_login", "login", "Login = " . $_POST['username']);
+                        header("Location: $CFG->affix/home.php");
                         exit();
                 }
         } else {
-                $uti->_insActlog("_err-login", "login", "Erro de Login = " . $post['username']);
+                $com->_insActlog("_err-login", "login", "Erro de Login = " . $_POST['username']);
                 session_destroy();
-                header("Location: ../index.php?action=erroLogin");
+                header("Location: $CFG->affix/index.php?action=erroLogin");
         }
 }
 /*
   echo "<pre>";
-  print_r($post);
+  print_r($_POST);
   exit();
  */
-if (isset($get['action'])) {
-        switch ($get['action']) {
+if (isset($_GET['action'])) {
+        switch ($_GET['action']) {
                 /**
                  * LogOff na sessão
                  */
@@ -77,36 +81,36 @@ if (isset($get['action'])) {
         }
 }
 
-if (isset($post['action'])) {
-        switch ($post['action']) {
+if (isset($_POST['action'])) {
+        switch ($_POST['action']) {
                 /**
-                 *  @param String $post['table'] Tabela 
-                 *  @param Array $post['campo'] campo para seed
+                 *  @param String $_POST['table'] Tabela 
+                 *  @param Array $_POST['campo'] campo para seed
                  *  @return Integer
                  */
                 case "seed" : {
-                                echo $db->seed($post['table'], $post['campo']);
+                                echo $db->seed($_POST['table'], $_POST['campo']);
                         } break;
 
                 /**
                  * Função para inserir dados
-                 *  @param String $post['table'] Tabela
-                 *  @param String $post['field'] Campo da chave primária
-                 *  @param Array $post['data'] Dados
+                 *  @param String $_POST['table'] Tabela
+                 *  @param String $_POST['field'] Campo da chave primária
+                 *  @param Array $_POST['data'] Dados
                  *  @return Integer
                  */
                 case "_insrtData" : {
-                                $table = $post['table'];
-                                $field = $post['field'];
-                                parse_str($post['data'], $post);
+                                $table = $_POST['table'];
+                                $field = $_POST['field'];
+                                parse_str($_POST['data'], $_POST);
 
-                                if (!isset($post['data']['id'])) {
+                                if (!isset($_POST['data']['id'])) {
                                         $id = $db->seed("$table", $field);
                                 } else
-                                        $id = $post['data']['id'];
+                                        $id = $_POST['data']['id'];
 
-                                $post['id'] = $id;
-                                if ($db->_insrt("$table", $post))
+                                $_POST['id'] = $id;
+                                if ($db->_insrt("$table", $_POST))
                                         echo $id;
                                 else
                                         echo '-1';
@@ -116,7 +120,7 @@ if (isset($post['action'])) {
                  * Função para inserir coisas e retornar
                  */
                 case "_insrtDataReturn" : {
-                                if ($db->_insrt($post['table'], $post))
+                                if ($db->_insrt($_POST['table'], $_POST))
                                         header("Location: $retorno?mens=OK");
                                 else
                                         header("Location: $retorno?err=Error");
@@ -124,20 +128,20 @@ if (isset($post['action'])) {
 
                 /**
                  * Função para atualizar dados
-                 *  @param String $post['table'] Tabela
-                 *  @param String $post['field'] Campo da chave primária
-                 *  @param Integer $post['id'] ID da chave primária
-                 *  @param Array $post['data'] Dados
+                 *  @param String $_POST['table'] Tabela
+                 *  @param String $_POST['field'] Campo da chave primária
+                 *  @param Integer $_POST['id'] ID da chave primária
+                 *  @param Array $_POST['data'] Dados
                  *  @return Boolean
                  */
                 case "_updtData" : {
-                                $table = $post['table'];
-                                $field = $post['field'];
-                                $id = $post['id'];
+                                $table = $_POST['table'];
+                                $field = $_POST['field'];
+                                $id = $_POST['id'];
 
-                                parse_str($post['data'], $post);
+                                parse_str($_POST['data'], $_POST);
 
-                                if ($db->_updt("$table", $post, "$field = $id"))
+                                if ($db->_updt("$table", $_POST, "$field = $id"))
                                         echo true;
                                 else
                                         echo false;
@@ -145,15 +149,15 @@ if (isset($post['action'])) {
 
                 /**
                  * Função para deletar dados
-                 *  @param String $post['table'] Tabela
-                 *  @param String $post['field'] Campo da chave primária
-                 *  @param Integer $post['id'] ID da chave primária
+                 *  @param String $_POST['table'] Tabela
+                 *  @param String $_POST['field'] Campo da chave primária
+                 *  @param Integer $_POST['id'] ID da chave primária
                  *  @return Boolean
                  */
                 case "_delData" : {
-                                $table = $post['table'];
-                                $field = $post['field'];
-                                $id = $post['id'];
+                                $table = $_POST['table'];
+                                $field = $_POST['field'];
+                                $id = $_POST['id'];
 
                                 if ($db->command("DELETE FROM $table WHERE $field = $id"))
                                         echo true;
@@ -163,28 +167,28 @@ if (isset($post['action'])) {
 
                 /**
                  * Função para atualizar dados
-                 *  @param String $post['table'] Tabela
-                 *  @param String $post['field'] Campo da chave primária
-                 *  @param Integer $post['id'] ID da chave primária
-                 *  @param Array $post['data'] Dados
+                 *  @param String $_POST['table'] Tabela
+                 *  @param String $_POST['field'] Campo da chave primária
+                 *  @param Integer $_POST['id'] ID da chave primária
+                 *  @param Array $_POST['data'] Dados
                  *  @return Boolean
                  */
                 case "_InsUpdt" : {
-                                $table = $post['table'];
-                                $field = $post['field'];
-                                $id = $post[$field];
+                                $table = $_POST['table'];
+                                $field = $_POST['field'];
+                                $id = $_POST[$field];
 
                                 if ($db->query("SELECT 0 FROM $table WHERE $field = $id")->RecordCount() == 0) {
-                                        if (isset($post[$field]) && $post[$field] == "-1")
-                                                unset($post[$field]);
+                                        if (isset($_POST[$field]) && $_POST[$field] == "-1")
+                                                unset($_POST[$field]);
                                         try {
-                                                $db->_insrt($table, $post);
+                                                $db->_insrt($table, $_POST);
                                         } catch (exception $e) {
                                                 header("Location: $retorno?err=$e");
                                         }
                                 } else {
                                         try {
-                                                $db->_updt($table, $post, "$field = $id");
+                                                $db->_updt($table, $_POST, "$field = $id");
                                         } catch (exception $e) {
                                                 header("Location: $retorno?err=$e");
                                         }

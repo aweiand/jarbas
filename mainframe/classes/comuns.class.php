@@ -10,7 +10,7 @@
  * @category field constructors
  * @package comuns
  */
-class comuns extends database {
+class comuns extends admComuns {
 
         /**
          * Retorna um formulário para inserção, com valores padrão
@@ -19,58 +19,46 @@ class comuns extends database {
          * @param Array $param
          * @return String
          */
-        function insertFormSimple($table, $param) {
+        function setTipos($table, $param) {
                 GLOBAL $CFG;
+
                 if (isset($param->id)) {
-                        $rs = parent::_get("$table", "id = " . $param->id);
-                        $val = $rs->Fields("nome");
-                        $img = "<img src='../../../" . $rs->Fields("imagem") . "' width='50' />
-                                        <br />
-                                        <span>
-                                                Excluir Imagem?
-                                                <input type='checkbox' name='imagem' value='' witdh='50'/>
-                                        </span>";
+                        $rs = parent::getRsTableId("tipos", $param->id)->FetchObject();
                         $btn = "Alterar";
-                        $id = "<input type='hidden' name='id' id='id' value='" . $param->id . "' />";
+                        $id = "<input type='hidden' name='id' id='id' value='$param->id' />";
                 } else {
-                        $id = "";
-                        $val = "";
-                        $img = "";
+                        $param->id = parent::getNextId("tipos");
+                        $rs = parent::getRsTableId("tipos", $param->id)->FetchObject();
                         $btn = "Cadastrar";
+                        $id = "<input type='hidden' name='id' id='id' value='$param->id' />";
                 }
 
                 if (isset($param->err))
-                        $mens = $this->trataError($param->err);
+                        $mens = $com->trataError($param->err);
                 elseif (isset($param->mens))
-                        $mens = $this->trataMens($param->mens);
+                        $mens = $com->trataMens($param->mens);
                 else
                         $mens = "";
 
-                $str = "   <form id='frm-Insert-Simple' action='../../../mainframe/actions.php' method='POST' enctype='multipart/form-data'>
+                $str = "   <form id='frm-Insert-Simple' action='$CFG->affix/$CFG->lib/actions.php' method='POST'>
                                         <div class='fullCenter'>
                                                 <fieldset>
                                                         <legend>Inserindo Dados</legend>
                                                         $mens
                                                         <div class='leftFloat'>                                                        
                                                                 <label for='nome'>Nome</label>
-                                                                <input type='text' name='nome' id='nome' value='$val' placeholder='digite um valor...' />
+                                                                <input type='text' name='nome' id='nome' value='$rs->NOME' placeholder='digite um valor...' />
                                                                 $id
-                                                                <input type='hidden' name='table' id='table' value='$table' />        
-                                                                <input type='hidden' name='action' value='upAndup' />
+                                                                <input type='hidden' name='table' id='table' value='tipos' />        
+                                                                <input type='hidden' name='action' value='_insUpdt' />
                                                                 <br />
                                                                 <span class='error alert alert-error' id='errNome' style='display: none;'>Campo Obrigatório!</span>
-                                                        </div>
-                                                        
-                                                        <div class='rightFloat'>                                                        
-                                                                <label for='imagem'>Imagem</label>
-                                                                $img
-                                                                <input type='file' name='imagem' id='imagem' size='10' />
                                                         </div>
                                                         
                                                 </fieldset>
                                                 <br />
                                                 <div class='fullCenter'>
-                                                        <button class='btn btn-warning' id='btn-saveSimpleForm'>$btn</button>
+                                                        <button class='btn btn-warning'>$btn</button>
                                                 </div>
                                         </div>
                                 </form>";
@@ -85,12 +73,13 @@ class comuns extends database {
          * @param Array $param
          * @return string
          */
-        function listFormSimple($table, $param) {
+        function getTipos($table, $param) {
                 GLOBAL $CFG;
                 @session_start();
-                $_SESSION['return'] = "pg/comuns/listFormSimple/$table.php";
+                $_SESSION['return'] = "pg/comuns/getTipos/tipos.php";
 
-                $str = $this->insertFormSimple($table, $param);
+                $str = $this->setTipos($table, $param);
+                $rs = parent::getRsTableId("tipos");
 
                 if (isset($param->err))
                         $mens = $this->trataError($param->err);
@@ -104,7 +93,7 @@ class comuns extends database {
                                         <button class='btn btn-primary' onclick='$(\"#frm-Insert-Simple\").animate({ height: \"toggle\", opacity: \"toggle\" }, \"slow\"); $(this).remove(); return false;'>Inserir</button>
                              </div>
                              <fieldset>
-                                <legend>Listagem de $table</legend>
+                                <legend>Lista de Tipos Cadastradas</legend>
                                 <table class='fullCenter table table-hover'  id='lst-field-full' cellpadding='10' cellspacing='10'>
                                         <thead>
                                                 <tr>
@@ -115,7 +104,133 @@ class comuns extends database {
                                                                 Nome
                                                         </th>
                                                         <th>
-                                                                Imagem
+                                                                &nbsp;
+                                                        </th>
+                                                </tr>
+                                        </thead>
+                                        <tbody>";
+
+                while ($o = $rs->FetchNextObject()) {
+                        $str.="<tr>
+                                        <td>
+                                                $o->ID
+                                        </td>
+                                        <td>
+                                                $o->NOME
+                                        </td>
+                                        <td>
+                                                <a class='btn' href='$CFG->www/pg/comuns/setTipos/tipos.php?id=$o->ID' title='Editar este Tipo'>
+                                                        <i class='icon-edit'></i>
+                                                </a>
+                                                <a class='btn' href='#' onclick=\"if (confirm('Você tem certeza?')) return true; return false;\" title='Deletar a Pessoa'>
+                                                        <i class='icon-remove'></i>
+                                                </a>
+                                        </td>
+                                </tr>";
+                }
+
+                $str.= "        </tbody>
+                                </table>
+                        </fieldset>
+                        
+                        <script>
+                                $(function(){
+                                        tblShort('lst-field-full');
+                                })
+                        </script>";
+                return $str;
+        }
+
+        /**
+         * Retorna um formulário para inserção, com valores padrão
+         * @global GLOBAL $CFG
+         * @param String $table
+         * @param Array $param
+         * @return String
+         */
+        function setSalas($table, $param) {
+                GLOBAL $CFG;
+
+                if (isset($param->id)) {
+                        $rs = parent::getRsTableId("salas", $param->id)->FetchObject();
+                        $btn = "Alterar";
+                        $id = "<input type='hidden' name='id' id='id' value='$param->id' />";
+                } else {
+                        $param->id = parent::getNextId("salas");
+                        $rs = parent::getRsTableId("salas", $param->id)->FetchObject();
+                        $btn = "Cadastrar";
+                        $id = "<input type='hidden' name='id' id='id' value='$param->id' />";
+                }
+
+                if (isset($param->err))
+                        $mens = $com->trataError($param->err);
+                elseif (isset($param->mens))
+                        $mens = $com->trataMens($param->mens);
+                else
+                        $mens = "";
+
+                $str = "   <form id='frm-Insert-Simple' action='$CFG->affix/$CFG->lib/actions.php' method='POST'>
+                                        <div class='fullCenter'>
+                                                <fieldset>
+                                                        <legend>Inserindo Dados</legend>
+                                                        $mens
+                                                        <div class='leftFloat'>                                                        
+                                                                <label for='nome'>Nome</label>
+                                                                <input type='text' name='nome' id='nome' value='$rs->NOME' placeholder='digite um valor...' />
+                                                                $id
+                                                                <input type='hidden' name='table' id='table' value='salas' />        
+                                                                <input type='hidden' name='action' value='_insUpdt' />
+                                                                <br />
+                                                                <span class='error alert alert-error' id='errNome' style='display: none;'>Campo Obrigatório!</span>
+                                                        </div>
+                                                        
+                                                </fieldset>
+                                                <br />
+                                                <div class='fullCenter'>
+                                                        <button class='btn btn-warning'>$btn</button>
+                                                </div>
+                                        </div>
+                                </form>";
+                return $str;
+        }
+
+        /**
+         * Retorna uma lista com valores padrão e botões de ateração
+         * edição e deleção
+         * @global GLOBAL $CFG
+         * @param String $table
+         * @param Array $param
+         * @return string
+         */
+        function getSalas($table, $param) {
+                GLOBAL $CFG;
+                @session_start();
+                $_SESSION['return'] = "pg/comuns/getSalas/tipos.php";
+
+                $str = $this->setSalas($table, $param);
+                $rs = parent::getRsTableId("salas");
+
+                if (isset($param->err))
+                        $mens = $this->trataError($param->err);
+                elseif (isset($param->mens))
+                        $mens = $this->trataMens($param->mens);
+                else
+                        $mens = "";
+
+                $str.= "<div class='fullCenter' style='margin-top: 5px; margin-bottom: 5px;'>
+                                        $mens
+                                        <button class='btn btn-primary' onclick='$(\"#frm-Insert-Simple\").animate({ height: \"toggle\", opacity: \"toggle\" }, \"slow\"); $(this).remove(); return false;'>Inserir</button>
+                             </div>
+                             <fieldset>
+                                <legend>Lista de Tipos Cadastradas</legend>
+                                <table class='fullCenter table table-hover'  id='lst-field-full' cellpadding='10' cellspacing='10'>
+                                        <thead>
+                                                <tr>
+                                                        <th>
+                                                                #
+                                                        </th>
+                                                        <th>
+                                                                Nome
                                                         </th>
                                                         <th>
                                                                 &nbsp;
@@ -123,48 +238,175 @@ class comuns extends database {
                                                 </tr>
                                         </thead>
                                         <tbody>";
-                $rs = parent::_get("$table");
 
-                $cor = $this->bg;
-                while (!$rs->EOF) {
-                        if ($cor == $this->bg)
-                                $cor = $this->bgCor;
-                        else
-                                $cor = $this->bg;
-
+                while ($o = $rs->FetchNextObject()) {
                         $str.="<tr>
                                         <td>
-                                                <span name='id'>" .
-                                $rs->Fields("id")
-                                . "</span>
-                                                </td>
-                                        <td>" .
-                                $rs->Fields("nome")
-                                . "</td>
-                                        <td>
-                                                <img src='../../../" . $rs->Fields("imagem") . "' width='100' />
+                                                $o->ID
                                         </td>
                                         <td>
-                                                <a class='btn' href='$CFG->www/pg/comuns/insertFormSimple/$table.php?id=" . $rs->Fields('id') . "' title='Editar este Item'>
+                                                $o->NOME
+                                        </td>
+                                        <td>
+                                                <a class='btn' href='$CFG->www/pg/comuns/setSalas/salas.php?id=$o->ID' title='Editar esta Sala'>
                                                         <i class='icon-edit'></i>
                                                 </a>
-                                                <a class='btn' href='#' id='btn-remove-item' title='Remover este Item' data-table='$table'>
+                                                <a class='btn' href='#' onclick=\"if (confirm('Você tem certeza?')) return true; return false;\" title='Deletar a Pessoa'>
                                                         <i class='icon-remove'></i>
                                                 </a>
                                         </td>
                                 </tr>";
-                        $rs->MoveNext();
                 }
 
-                $str.= "</tbody>
+                $str.= "        </tbody>
                                 </table>
                         </fieldset>
-                                <script>
-                                        $(function(){
-                                                tblShort('lst-field-full');
-                                                $('#frm-Insert-Simple').css({ display : 'none' });
-                                        })
-                                </script>";
+                        
+                        <script>
+                                $(function(){
+                                        tblShort('lst-field-full');
+                                })
+                        </script>";
+                return $str;
+        }
+        
+        /**
+         * Retorna um formulário para inserção, com valores padrão
+         * @global GLOBAL $CFG
+         * @param String $table
+         * @param Array $param
+         * @return String
+         */
+        function setRegras($table, $param) {
+                GLOBAL $CFG;
+
+                if (isset($param->id)) {
+                        $rs = parent::getRsTableId("regras", $param->id)->FetchObject();
+                        $btn = "Alterar";
+                        $id = "<input type='hidden' name='id' id='id' value='$param->id' />";
+                } else {
+                        $param->id = parent::getNextId("regras");
+                        $rs = parent::getRsTableId("regras", $param->id)->FetchObject();
+                        $btn = "Cadastrar";
+                        $id = "<input type='hidden' name='id' id='id' value='$param->id' />";
+                }
+
+                if (isset($param->err))
+                        $mens = $com->trataError($param->err);
+                elseif (isset($param->mens))
+                        $mens = $com->trataMens($param->mens);
+                else
+                        $mens = "";
+
+                $str = "   <form id='frm-Insert-Simple' action='$CFG->affix/$CFG->lib/actions.php' method='POST'>
+                                        <div class='fullCenter'>
+                                                <fieldset>
+                                                        <legend>Inserindo Dados</legend>
+                                                        $mens
+                                                        <div class='leftFloat'>                                                        
+                                                                <label for='nome'>Nome</label>
+                                                                <input type='text' name='nome' id='nome' value='$rs->NOME' placeholder='digite um valor...' />
+                                                                $id
+                                                                <input type='hidden' name='table' id='table' value='regras' />        
+                                                                <input type='hidden' name='action' value='_insUpdt' />
+                                                                <br />
+                                                                <span class='error alert alert-error' id='errNome' style='display: none;'>Campo Obrigatório!</span>
+                                                        </div>
+                                                        
+                                                        <div class='rightFloat'>
+                                                                <label>Descrição</label>
+                                                                <textarea name='descricao' id='descricao'>$rs->DESCRICAO</textarea>
+                                                        </div>
+                                                
+                                                </fieldset>
+                                                <br />
+                                                <div class='fullCenter'>
+                                                        <button class='btn btn-warning'>$btn</button>
+                                                </div>
+                                        </div>
+                                </form>";
+                return $str;
+        }
+
+        /**
+         * Retorna uma lista com valores padrão e botões de ateração
+         * edição e deleção
+         * @global GLOBAL $CFG
+         * @param String $table
+         * @param Array $param
+         * @return string
+         */
+        function getRegras($table, $param) {
+                GLOBAL $CFG;
+                @session_start();
+                $_SESSION['return'] = "pg/comuns/getRegras/regras.php";
+
+                $str = $this->setRegras($table, $param);
+                $rs = parent::getRsTableId("regras");
+
+                if (isset($param->err))
+                        $mens = $this->trataError($param->err);
+                elseif (isset($param->mens))
+                        $mens = $this->trataMens($param->mens);
+                else
+                        $mens = "";
+
+                $str.= "<div class='fullCenter' style='margin-top: 5px; margin-bottom: 5px;'>
+                                        $mens
+                                        <button class='btn btn-primary' onclick='$(\"#frm-Insert-Simple\").animate({ height: \"toggle\", opacity: \"toggle\" }, \"slow\"); $(this).remove(); return false;'>Inserir</button>
+                             </div>
+                             <fieldset>
+                                <legend>Lista de Tipos Cadastradas</legend>
+                                <table class='fullCenter table table-hover'  id='lst-field-full' cellpadding='10' cellspacing='10'>
+                                        <thead>
+                                                <tr>
+                                                        <th>
+                                                                #
+                                                        </th>
+                                                        <th>
+                                                                Nome
+                                                        </th>
+                                                        <th>
+                                                                Descrição
+                                                        </th>
+                                                        <th>
+                                                                &nbsp;
+                                                        </th>
+                                                </tr>
+                                        </thead>
+                                        <tbody>";
+
+                while ($o = $rs->FetchNextObject()) {
+                        $str.="<tr>
+                                        <td>
+                                                $o->ID
+                                        </td>
+                                        <td>
+                                                $o->NOME
+                                        </td>
+                                        <td>
+                                                $o->DESCRICAO
+                                        </td>
+                                        <td>
+                                                <a class='btn' href='$CFG->www/pg/comuns/getRegras/regras.php?id=$o->ID' title='Editar esta Regra'>
+                                                        <i class='icon-edit'></i>
+                                                </a>
+                                                <a class='btn' href='#' onclick=\"if (confirm('Você tem certeza?')) return true; return false;\" title='Deletar a Pessoa'>
+                                                        <i class='icon-remove'></i>
+                                                </a>
+                                        </td>
+                                </tr>";
+                }
+
+                $str.= "        </tbody>
+                                </table>
+                        </fieldset>
+                        
+                        <script>
+                                $(function(){
+                                        tblShort('lst-field-full');
+                                })
+                        </script>";
                 return $str;
         }
 
@@ -239,70 +481,30 @@ class comuns extends database {
                 return $str;
         }
 
-        function downloads($table, $param) {
-                $str = "
-                <fieldset>
-                    <legend>Downloads</legend>
-                    <table class='table table-stripped'>
-                        <thead>
-                            <tr>
-                                <th style='min-width: 400px; max-width: 55%;'>Nome</th> 
-                                <th style='min-width: 100px; max-width: 15%;'>Versão</th> 
-                                <th style='min-width: 100px; max-width: 15%;'>Data</th> 
-                                <th style='min-width: 100px; max-width: 15%;'>Download</th>
-                            </tr>
-                        </thead>
-                            <tbody>";
-
-                $ponteiro = opendir($_SERVER['DOCUMENT_ROOT'] . $this->assets);
-
-                while ($nome_itens = readdir($ponteiro)) {
-                        $item = explode('.', $nome_itens);
-                        if (is_file($_SERVER['DOCUMENT_ROOT'] . $this->assets . $nome_itens)) {
-                                $file = @explode('__', $item[0]);
-                                $versao = @str_replace('-', '.', $file[1]);
-                                $arquivo = @str_replace('_', ' ', $file[0]);
-                                $data = @date('d/m/Y', filectime($_SERVER['DOCUMENT_ROOT'] . $this->assets . $nome_itens));
-
-                                $str.= "
-                            <tr>
-                                <td class='nome_tutorial'>
-                                    $arquivo
-                                </td>
-                                <td class='versão'>
-                                    $versao
-                                </td>
-                                <td class='data'>
-                                    $data
-                                </td>
-                                <td>
-                                    <a href='http://www.facos.edu.br/$this->assets/$nome_itens'>
-                                            <img width='50px' height='50px' src='http://www.cnecead.com.br/tudown/img/icon_donwload.png'>
-                                    </a>
-                                </td>
-                            </tr>";
-                        }
+        /**
+         * Função para inserir logs de ação na tabela actlogs
+         * @param type $action
+         * @param type $modulo
+         * @param type $text
+         * @param type $codusuario
+         * @return boolean
+         */
+        function _insActlog($action = "_login", $modulo = "site", $text = "", $codusuario = false) {
+                if ((!$codusuario) && isset($_SESSION['usuid'])) {
+                        $arr['pessoa'] = $_SESSION['usuid'];
+                } else {
+                        $arr['pessoa'] = $codusuario;
                 }
-                $str.="         </tbody>
-                    </table>
-                </fieldset>
-                <script>
-                    $(function() {
-                        $('.table').dataTable({
-                            'bPaginate': false,
-                            'bLengthChange': true,
-                            'bFilter': false,
-                            'bSort': true,
-                            'bInfo': false,
-                            'bAutoWidth': true,
-                            'oLanguage': {
-                                    'sUrl': '/cead/admin2/mainframe/plugins/jquery/DataTables-1.9.4/datatables.Portuguese.txt'
-                            },
-                            'bJQueryUI': false
-                        });
-                    });
-                </script>";
-                return $str;
+
+                $arr['action'] = $action;
+                $arr['modulo'] = $modulo;
+                $arr['text'] = $text;
+
+                if (parent::_insrt("public.actlogs", $arr)) {
+                        return true;
+                } else {
+                        return false;
+                }
         }
 
 }
