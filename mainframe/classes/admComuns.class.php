@@ -8,19 +8,19 @@
  */
 class admComuns extends database {
 
-        function getRsTableId($table, $id = "") {
-                $sql = "SELECT * FROM $table ";
+    function getRsTableId($table, $id = "") {
+        $sql = "SELECT * FROM $table ";
 
-                if ($id != "") {
-                        $sql.= "WHERE id = $id";
-                }
-
-                $sql.= "ORDER BY 1 ASC";
-                return parent::query($sql);
+        if ($id != "") {
+            $sql.= "WHERE id = $id";
         }
 
-        function getNextId($table) {
-                return parent::seed($table, "id");
-        }
+        $sql.= "ORDER BY 1 ASC";
+        return parent::query($sql);
+    }
+
+    function getNextId($table) {
+        return parent::seed($table, "id");
+    }
 
 }

@@ -22,7 +22,7 @@ GLOBAL $CFG;
 <link rel="stylesheet" type="text/css" href="<?= $CFG->affix . $CFG->lib ?>plugins/jquery/DataTables-1.9.4/media/css/demo_table.css" />   	
 <link rel="stylesheet" type="text/css" href="<?= $CFG->affix . $CFG->lib ?>plugins/jquery/css/custom-theme/jquery-ui-1.10.3.custom.min.css" />
 <link rel="stylesheet" type="text/css" href="<?= $CFG->affix . $CFG->lib ?>plugins/bootstrap/css/bootstrap.min.css" />
-<link rel="stylesheet" type="text/css" href="<?= $CFG->affix . $CFG->lib ?>plugins/Font-Awesome/css/font-awesome-ie7.min.css" />
-<link rel="stylesheet" type="text/css" href="<?= $CFG->affix . $CFG->lib ?>plugins/Font-Awesome/css/font-awesome.min.css" />
+<link rel="stylesheet" type="text/css" href="<?= $CFG->affix . $CFG->lib ?>plugins/Font-Awesome/css/font-awesome-ie7.css" />
+<link rel="stylesheet" type="text/css" href="<?= $CFG->affix . $CFG->lib ?>plugins/Font-Awesome/css/font-awesome.css" />
 <link rel="stylesheet" type="text/css" href="<?= $CFG->affix . $CFG->lib ?>css/core.css" />
 <link rel="stylesheet" type="text/css" href="<?= $CFG->affix . $CFG->lib ?>css/comuns.css" />

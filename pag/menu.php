@@ -1,58 +1,54 @@
 <?php
 GLOBAL $CFG;
 ?>
-<div class="center">
-        <ul class="nav nav-pills">
-                <li class="active">
-                        <a href="<?= $CFG->affix ?>">Início</a>
-                </li>
-                <li class="dropdown">
-                        <a class="dropdown-toggle" id="drop4" role="button" data-toggle="dropdown" href="#">Eventos<b class="caret"></b></a>
-                        <ul id="menu1" class="dropdown-menu" role="menu" aria-labelledby="drop4">
-                                <li role="presentation">
-                                        <a role="menuitem" tabindex="-1" href="<?= $CFG->affix ?>pg/eventos/getEventos/eventos.php">Visualizar</a>
-                                </li>
-                                <li role="presentation">
-                                        <a role="menuitem" tabindex="-1" href="<?= $CFG->affix ?>pg/eventos/setEventos/eventos.php">Cadastro</a>
-                                </li>
-                                <li role="presentation" class="divider"></li>
-                                <li role="presentation">
-                                        <a role="menuitem" tabindex="-1" href="<?= $CFG->affix ?>pg/eventos/getInscritos/eventos.php">Inscrições</a>
-                                </li>
-                                <li role="presentation">
-                                        <a role="menuitem" tabindex="-1" href="<?= $CFG->affix ?>pg/eventos/setPresencas/presencas.php">Presenças</a>
-                                </li>
-                        </ul>
-                </li>
-                <li class="dropdown">
-                        <a class="dropdown-toggle" id="drop5" role="button" data-toggle="dropdown" href="#">Usuários<b class="caret"></b></a>
-                        <ul id="menu2" class="dropdown-menu" role="menu" aria-labelledby="drop5">
-                                <li role="presentation">
-                                        <a role="menuitem" tabindex="-1" href="<?= $CFG->affix ?>pg/pessoas/getPessoas/pessoas.php">Lista</a>
-                                </li>
-                                <li role="presentation">
-                                        <a role="menuitem" tabindex="-1" href="<?= $CFG->affix ?>pg/pessoas/setPessoas/pessoas.php">Cadastro</a>
-                                </li>
-                        </ul>
-                </li>
-                <li class="dropdown">
-                        <a class="dropdown-toggle" id="drop5" role="button" data-toggle="dropdown" href="#">Outros<b class="caret"></b></a>
-                        <ul id="menu3" class="dropdown-menu" role="menu" aria-labelledby="drop5">
-                                <li role="presentation">
-                                        <a role="menuitem" tabindex="-1" href="<?= $CFG->affix ?>pg/comuns/getTipos/tipos.php">Tipos</a>
-                                </li>
-                                <li role="presentation">
-                                        <a role="menuitem" tabindex="-1" href="<?= $CFG->affix ?>pg/comuns/getSalas/salas.php">Salas</a>
-                                </li>
-                                <li role="presentation">
-                                        <a role="menuitem" tabindex="-1" href="<?= $CFG->affix ?>pg/comuns/getRegras/regras.php">Regras</a>
-                                </li>
-                        </ul>
-                </li>
-                <li class="active pull-right">
-                        <a href="<?= $CFG->affix . $CFG->lib ?>actions.php?action=logoff" class="btn-danger" title="Sair">
-                                <i class="icon-off"></i>
-                        </a>
-                </li>
-        </ul>
-</div>
+<script>
+    $(function() {
+        $("#menu-common, #menu-adm").menu();
+    });
+</script>
+
+<ul id="menu-common">
+    <li <?php if (strpos($_SERVER['REQUEST_URI'], 'index.php')) echo 'class="ui-state-focus"' ?>>
+        <a href="<?= $CFG->www ?>index.php">Home</a>
+    </li>
+    <li <?php if (strpos($_SERVER['REQUEST_URI'], 'todoseventos/eventos.php')) echo 'class="ui-state-focus"' ?>>
+        <a href="<?= $CFG->www ?>pg/eventos/todoseventos/eventos.php">Eventos</a>
+    </li>
+    <li <?php if (strpos($_SERVER['REQUEST_URI'], 'gradedehorarios/horarios.php')) echo 'class="ui-state-focus"' ?>>
+        <a href="<?= $CFG->www ?>pg/eventos/gradedehorarios/horarios.php">Grade de Horários</a>
+    </li>                        
+    <?php
+    if (isset($_SESSION['usuid'])) {
+        ?>
+        <li <?php if (strpos($_SERVER['REQUEST_URI'], 'emissaodecertificado/certificados.php')) echo 'class="ui-state-focus"' ?>>
+            <a href="<?= $CFG->www ?>pg/pessoas/emissaodecertificado/certificados.php">Emissão de Certificados</a>
+        </li> 
+    <?php } else { ?>
+        <li <?php if (strpos($_SERVER['REQUEST_URI'], 'home.php')) echo 'class="ui-state-focus"' ?>>
+            <a href="<?= $CFG->www ?>home.php">Emissão de Certificados</a>
+        </li> 
+    <?php } ?>
+</ul>
+
+<?php
+if (isset($_SESSION['usuid'])) {
+    ?>
+    <ul id="menu-adm" style="margin-top: 20px">
+        <li <?php if (strpos($_SERVER['REQUEST_URI'], 'cadastroalteracao/comuns.php')) echo 'class="ui-state-focus"' ?>>
+            <a href="<?= $CFG->www ?>pg/comuns/cadastroalteracao/comuns.php">Cadastro / Alteração</a>
+        </li>
+        <li <?php if (strpos($_SERVER['REQUEST_URI'], 'vinculopapeiseventos/papeis.php')) echo 'class="ui-state-focus"' ?>>
+            <a href="<?= $CFG->www ?>pg/comuns/vinculopapeiseventos/papeis.php">Papéis / Eventos</a>
+        </li>
+        <li <?php if (strpos($_SERVER['REQUEST_URI'], 'vinculopessoaseventos/pessoas.php')) echo 'class="ui-state-focus"' ?>>
+            <a href="<?= $CFG->www ?>pg/comuns/vinculopessoaseventos/pessoas.php">Pessoas / Eventos</a>
+        </li>
+        <li <?php if (strpos($_SERVER['REQUEST_URI'], 'lancapresencas/presencas.php')) echo 'class="ui-state-focus"' ?>>
+            <a href="<?= $CFG->www ?>pg/comuns/lancapresencas/presencas.php">Presenças</a>
+        </li>
+        <li>
+            <a href="<?= $CFG->www ?>mainframe/actions.php?action=logoff">Sair</a>
+        </li>                    
+    </ul>
+    <?php
+}

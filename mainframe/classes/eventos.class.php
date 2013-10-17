@@ -2,36 +2,36 @@
 
 class eventos extends admEventos {
 
-        /**
-         * Retorna um formulário para inserção, com valores padrão
-         * @global GLOBAL $CFG
-         * @param String $table
-         * @param Array $param
-         * @return String
-         */
-        function setEventos($table, $param) {
-                GLOBAL $CFG;
-                $com = new comuns();
+    /**
+     * Retorna um formulário para inserção, com valores padrão
+     * @global GLOBAL $CFG
+     * @param String $table
+     * @param Array $param
+     * @return String
+     */
+    function setEventos($table, $param) {
+        GLOBAL $CFG;
+        $com = new comuns();
 
-                if (isset($param->id)) {
-                        $rs = parent::getRsEventosId($param->id)->FetchObject();
-                        $btn = "Alterar";
-                        $id = "<input type='hidden' name='id' id='id' value='$param->id' />";
-                } else {
-                        $param->id = parent::getNextId();
-                        $rs = parent::getRsEventosId($param->id)->FetchObject();
-                        $btn = "Cadastrar";
-                        $id = "<input type='hidden' name='id' id='id' value='$param->id' />";
-                }
+        if (isset($param->id)) {
+            $rs = parent::getRsEventosId($param->id)->FetchObject();
+            $btn = "Alterar";
+            $id = "<input type='hidden' name='id' id='id' value='$param->id' />";
+        } else {
+            $param->id = parent::getNextId();
+            $rs = parent::getRsEventosId($param->id)->FetchObject();
+            $btn = "Cadastrar";
+            $id = "<input type='hidden' name='id' id='id' value='$param->id' />";
+        }
 
-                if (isset($param->err))
-                        $mens = $com->trataError($param->err);
-                elseif (isset($param->mens))
-                        $mens = $com->trataMens($param->mens);
-                else
-                        $mens = "";
+        if (isset($param->err))
+            $mens = $com->trataError($param->err);
+        elseif (isset($param->mens))
+            $mens = $com->trataMens($param->mens);
+        else
+            $mens = "";
 
-                $str = "   <form id='frm-Insert-Simple' action='$CFG->affix/$CFG->lib/actions.php' method='POST'>
+        $str = "   <form id='frm-Insert-Simple' action='$CFG->affix/$CFG->lib/actions.php' method='POST'>
                                         <div class='fullCenter'>
                                                 <fieldset>
                                                         <legend>Inserindo Evento</legend>
@@ -53,35 +53,35 @@ class eventos extends admEventos {
                                                 </div>
                                         </div>
                                 </form>";
-                return $str;
-        }
+        return $str;
+    }
 
-        /**
-         * Retorna uma lista com valores padrão e botões de ateração
-         * edição e deleção
-         * @global GLOBAL $CFG
-         * @param String $table
-         * @param Array $param
-         * @return string
-         */
-        function getEventos($table, $param) {
-                GLOBAL $CFG;
-                @session_start();
-                $_SESSION['return'] = "pg/eventos/getEventos/pessoas.php";
+    /**
+     * Retorna uma lista com valores padrão e botões de ateração
+     * edição e deleção
+     * @global GLOBAL $CFG
+     * @param String $table
+     * @param Array $param
+     * @return string
+     */
+    function getEventos($table, $param) {
+        GLOBAL $CFG;
+        @session_start();
+        $_SESSION['return'] = "pg/eventos/getEventos/pessoas.php";
 
-                $com = new comuns();
+        $com = new comuns();
 
-                $str = $this->setEventos($table, $param);
-                $rs = parent::getRsEventosId();
+        $str = $this->setEventos($table, $param);
+        $rs = parent::getRsEventosId();
 
-                if (isset($param->err))
-                        $mens = $com->trataError($param->err);
-                elseif (isset($param->mens))
-                        $mens = $com->trataMens($param->mens);
-                else
-                        $mens = "";
+        if (isset($param->err))
+            $mens = $com->trataError($param->err);
+        elseif (isset($param->mens))
+            $mens = $com->trataMens($param->mens);
+        else
+            $mens = "";
 
-                $str.= "<div class='fullCenter' style='margin-top: 5px; margin-bottom: 5px;'>
+        $str.= "<div class='fullCenter' style='margin-top: 5px; margin-bottom: 5px;'>
                                         $mens
                                         <button class='btn btn-primary' onclick='$(\"#frm-Insert-Simple\").animate({ height: \"toggle\", opacity: \"toggle\" }, \"slow\"); $(this).remove(); return false;'>Inserir</button>
                              </div>
@@ -106,8 +106,8 @@ class eventos extends admEventos {
                                         </thead>
                                         <tbody>";
 
-                while ($o = $rs->FetchNextObject()) {
-                        $str.="<tr>
+        while ($o = $rs->FetchNextObject()) {
+            $str.="<tr>
                                         <td>
                                                 $o->ID
                                         </td>
@@ -129,9 +129,9 @@ class eventos extends admEventos {
                                                 </a>
                                         </td>
                                 </tr>";
-                }
+        }
 
-                $str.= "        </tbody>
+        $str.= "        </tbody>
                                 </table>
                         </fieldset>
                         
@@ -140,7 +140,89 @@ class eventos extends admEventos {
                                         tblShort('lst-field-full');
                                 })
                         </script>";
-                return $str;
+        return $str;
+    }
+
+    function todoseventos($table, $param) {
+        GLOBAL $CFG;
+
+        $str = "<fieldset>
+                    <legend>Eventos Correntes</legend>
+                    <table class='table'>
+                        <thead>
+                            <tr>
+                                <th>
+                                    #
+                                </th>
+                                <th>
+                                    Evento
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>";
+
+        $rs = parent::getRsEventosId();
+        while ($o = $rs->FetchNextObject()) {
+            $str.= "<tr>
+                        <td>
+                            $o->ID
+                        </td>
+                        <td>
+                            $o->NOME
+                        </td>
+                    </tr>";
         }
+
+
+        $str.="     </tbody>
+                </table>
+            </fieldset>";
+
+        return $str;
+    }
+
+    function gradedehorarios($table, $param) {
+        GLOBAL $CFG;
+        @session_start();
+
+        if (!isset($param->evento)) {
+            $rs = parent::getRsGradeId();
+        } else {
+            $rs = parent::getRsGradeId($param->evento);
+        }
+
+        $str = "<fieldset>
+                    <legend>Grade de Horário do Evento - EVENTO XXXXXX</legend>
+                    <table class='table'>
+                        <thead>
+                            <tr>
+                                <th>
+                                    #
+                                </th>
+                                <th>
+                                    Evento
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>";
+
+        while ($o = $rs->FetchNextObject()) {
+            $str.= "<tr>
+                        <td>
+                            $o->ID
+                        </td>
+                        <td>
+                            $o->NOME
+                        </td>
+                    </tr>";
+        }
+
+
+        $str.="     </tbody>
+                </table>
+            </fieldset>";
+
+        return $str;
+    }
 
 }

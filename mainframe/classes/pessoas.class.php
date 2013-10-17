@@ -2,36 +2,36 @@
 
 class pessoas extends admPessoas {
 
-        /**
-         * Retorna um formulário para inserção, com valores padrão
-         * @global GLOBAL $CFG
-         * @param String $table
-         * @param Array $param
-         * @return String
-         */
-        function setPessoas($table, $param) {
-                GLOBAL $CFG;
-                $com = new comuns();
+    /**
+     * Retorna um formulário para inserção, com valores padrão
+     * @global GLOBAL $CFG
+     * @param String $table
+     * @param Array $param
+     * @return String
+     */
+    function setPessoas($table, $param) {
+        GLOBAL $CFG;
+        $com = new comuns();
 
-                if (isset($param->id)) {
-                        $rs = parent::getRsPessoasId($param->id)->FetchObject();
-                        $btn = "Alterar";
-                        $id = "<input type='hidden' name='id' id='id' value='$param->id' />";
-                } else {
-                        $param->id = parent::getNextId();
-                        $rs = parent::getRsPessoasId($param->id)->FetchObject();
-                        $btn = "Cadastrar";
-                        $id = "<input type='hidden' name='id' id='id' value='$param->id' />";
-                }
+        if (isset($param->id)) {
+            $rs = parent::getRsPessoasId($param->id)->FetchObject();
+            $btn = "Alterar";
+            $id = "<input type='hidden' name='id' id='id' value='$param->id' />";
+        } else {
+            $param->id = parent::getNextId();
+            $rs = parent::getRsPessoasId($param->id)->FetchObject();
+            $btn = "Cadastrar";
+            $id = "<input type='hidden' name='id' id='id' value='$param->id' />";
+        }
 
-                if (isset($param->err))
-                        $mens = $com->trataError($param->err);
-                elseif (isset($param->mens))
-                        $mens = $com->trataMens($param->mens);
-                else
-                        $mens = "";
+        if (isset($param->err))
+            $mens = $com->trataError($param->err);
+        elseif (isset($param->mens))
+            $mens = $com->trataMens($param->mens);
+        else
+            $mens = "";
 
-                $str = "   <form id='frm-Insert-Simple' action='$CFG->affix/$CFG->lib/actions.php' method='POST'>
+        $str = "   <form id='frm-Insert-Simple' action='$CFG->affix/$CFG->lib/actions.php' method='POST'>
                                         <div class='fullCenter'>
                                                 <fieldset>
                                                         <legend>Inserindo Dados</legend>
@@ -78,35 +78,35 @@ class pessoas extends admPessoas {
                                                 </div>
                                         </div>
                                 </form>";
-                return $str;
-        }
+        return $str;
+    }
 
-        /**
-         * Retorna uma lista com valores padrão e botões de ateração
-         * edição e deleção
-         * @global GLOBAL $CFG
-         * @param String $table
-         * @param Array $param
-         * @return string
-         */
-        function getPessoas($table, $param) {
-                GLOBAL $CFG;
-                @session_start();
-                $_SESSION['return'] = "pg/pessoas/getPessoas/pessoas.php";
+    /**
+     * Retorna uma lista com valores padrão e botões de ateração
+     * edição e deleção
+     * @global GLOBAL $CFG
+     * @param String $table
+     * @param Array $param
+     * @return string
+     */
+    function getPessoas($table, $param) {
+        GLOBAL $CFG;
+        @session_start();
+        $_SESSION['return'] = "pg/pessoas/getPessoas/pessoas.php";
 
-                $com = new comuns();
+        $com = new comuns();
 
-                $str = $this->setPessoas($table, $param);
-                $rs = parent::getRsPessoasId();
+        $str = $this->setPessoas($table, $param);
+        $rs = parent::getRsPessoasId();
 
-                if (isset($param->err))
-                        $mens = $com->trataError($param->err);
-                elseif (isset($param->mens))
-                        $mens = $com->trataMens($param->mens);
-                else
-                        $mens = "";
+        if (isset($param->err))
+            $mens = $com->trataError($param->err);
+        elseif (isset($param->mens))
+            $mens = $com->trataMens($param->mens);
+        else
+            $mens = "";
 
-                $str.= "<div class='fullCenter' style='margin-top: 5px; margin-bottom: 5px;'>
+        $str.= "<div class='fullCenter' style='margin-top: 5px; margin-bottom: 5px;'>
                                         $mens
                                         <button class='btn btn-primary' onclick='$(\"#frm-Insert-Simple\").animate({ height: \"toggle\", opacity: \"toggle\" }, \"slow\"); $(this).remove(); return false;'>Inserir</button>
                              </div>
@@ -131,8 +131,8 @@ class pessoas extends admPessoas {
                                         </thead>
                                         <tbody>";
 
-                while ($o = $rs->FetchNextObject()) {
-                        $str.="<tr>
+        while ($o = $rs->FetchNextObject()) {
+            $str.="<tr>
                                         <td>
                                                 $o->ID
                                         </td>
@@ -151,9 +151,9 @@ class pessoas extends admPessoas {
                                                 </a>
                                         </td>
                                 </tr>";
-                }
+        }
 
-                $str.= "        </tbody>
+        $str.= "        </tbody>
                                 </table>
                         </fieldset>
                         
@@ -162,7 +162,82 @@ class pessoas extends admPessoas {
                                         tblShort('lst-field-full');
                                 })
                         </script>";
-                return $str;
+        return $str;
+    }
+
+    function autocadastro($table, $param) {
+        GLOBAL $CFG;
+        $evnt = new admEventos();
+
+        $str = "<fieldset>
+                    <legend>Cadastro de Usuários</legend>
+                    
+                    <form action='$CFG->affix/$CFG->lib/actions.php' method='POST'>
+                        <table class='table'>
+                            <tr>
+                                <td>
+                                    <label>Nome</label>
+                                </td>
+                                <td>
+                                    <input type='text' name='nome' id='nome' />
+                                </td>
+                                <td rowspan='4'>
+                                    <label>Eventos</label>
+                                    <select name='evento' id='evento' multiple>";
+
+        $rs = $evnt->getRsEventosId();
+        while ($o = $rs->FetchNextObject()) {
+            $str.= "                    <option value='$o->ID'>$o->NOME</option >";
         }
+
+        $str.="                     </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>E-mail</label>
+                                </td>
+                                <td>
+                                    <input type='email' name='email' id='email' />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>CPF</label>
+                                </td>
+                                <td>
+                                    <input type='text' name='cpf' id='cpf' />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>Login</label>
+                                </td>
+                                <td>
+                                    <input type='text' name='login' id='login' />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>Senha</label>
+                                </td>
+                                <td>
+                                    <input type='password' name='senha' id='senha' />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type='submit' class='btn btn-primary' value='Cadastrar' />
+                                </td>
+                                <td colspan='2'>
+                                    <input type='reset' class='btn btn-danger' value='Resetar' />
+                                </td>
+                            </tr>                            
+                        </table>
+                    </form>
+                    
+                </fieldset>";
+        return $str;
+    }
 
 }
