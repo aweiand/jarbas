@@ -256,7 +256,7 @@ function tblShort(tbl) {
                 "bInfo": true,
                 "bAutoWidth": true,
                 "oLanguage": {
-                        "sUrl": _dir() + "admin2/mainframe/plugins/jquery/DataTables-1.9.4/datatables.Portuguese.txt"
+                        "sUrl": _dir() + "jarbas/mainframe/plugins/jquery/DataTables-1.9.4/datatables.Portuguese.txt"
                 },
                 "bJQueryUI": false,
                 "aLengthMenu": [
@@ -281,7 +281,7 @@ function habilitaEdicaoMini(obj, w, h) {
 
         $(obj).tinymce({
                 // Location of TinyMCE script
-                script_url: _dir() + 'tools/mainframe/plugins/tinymce/jscripts/tiny_mce/tiny_mce.js',
+                script_url: _dir() + 'jarbas/mainframe/plugins/tinymce/jscripts/tiny_mce/tiny_mce.js',
                 // General options
                 theme: "advanced",
                 language: "pt",
@@ -317,7 +317,7 @@ function habilitaEdicao(obj, w, h) {
 
         $(obj).tinymce({
                 // Location of TinyMCE script
-                script_url: _dir() + 'tools/mainframe/plugins/tinymce/jscripts/tiny_mce/tiny_mce.js',
+                script_url: _dir() + 'jarbas/mainframe/plugins/tinymce/jscripts/tiny_mce/tiny_mce.js',
                 // General options
                 theme: "advanced",
                 language: "pt",

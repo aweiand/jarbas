@@ -665,10 +665,10 @@ class utils extends database {
             $param->data = "nome";
 
         if (!isset($param->searchclass))
-            $param->searchclass = "dataCloud";
+            $param->searchclass = "database";
 
         if (!isset($param->getJsonDB))
-            $param->getJsonDB = "usuario/getJsonAlunos";
+            $param->getJsonDB = "pessoas/getJSONPessoas";
 
         if (!isset($param->extraparam))
             $param->extraparam = "";
@@ -684,7 +684,7 @@ class utils extends database {
         $str = "<input type='text' name='$param->name' id='$param->name' style='$param->style' class='$param->class' />
             	<script type='text/javascript'>
                     $(function(){
-                        $('#$param->name').tokenInput('/cead/admin2/act/$param->getJsonDB/$param->table.php?$param->extraparam', {
+                        $('#$param->name').tokenInput('/jarbas/act/$param->getJsonDB/$param->table.php?$param->extraparam', {
                             preventDuplicates: true,
                             queryParam: 'term',
                             $param->theme

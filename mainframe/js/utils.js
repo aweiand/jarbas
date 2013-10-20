@@ -9,7 +9,7 @@ function _dir() {
         var urlExplode = url.split("/");
         var serverName = urlExplode[0];
 
-        serverName = 'http://' + serverName + '/cead/';
+        serverName = 'http://' + serverName + '/';
         return serverName;
 }
 

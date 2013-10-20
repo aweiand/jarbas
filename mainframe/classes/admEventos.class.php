@@ -49,6 +49,36 @@ class admEventos extends database {
         return $str;
     }
 
+    function getSelectTipo($id = "") {
+        $uti = new utils();
+        $sql = "SELECT * FROM tipos ";
+
+        if ($id != "") {
+            $sql.= "WHERE id = $id";
+        }
+
+        $sql.= "ORDER BY nome ASC";
+
+        $str = $uti->getSelectDb($id, "tipos", "id", "nome", "tipo", parent::query($sql));
+
+        return $str;
+    }
+
+    function getSelectSala($id = "") {
+        $uti = new utils();
+        $sql = "SELECT * FROM salas ";
+
+        if ($id != "") {
+            $sql.= "WHERE id = $id";
+        }
+
+        $sql.= "ORDER BY nome ASC";
+
+        $str = $uti->getSelectDb($id, "salas", "id", "nome", "sala", parent::query($sql));
+
+        return $str;
+    }
+
     function getRsPessoasEvento($evento) {
         $sql = "SELECT * FROM inscricoes i
                     INNER JOIN pessoas p ON (i.pessoa = p.id)

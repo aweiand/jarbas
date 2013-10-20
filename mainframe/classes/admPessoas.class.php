@@ -8,62 +8,103 @@
  */
 class admPessoas extends database {
 
-        /**
-         * Funcao para efetuar verificacao do Login / Senha
-         * @access public
-         * @param $user String - Usuario
-         * @param $passw String - Senha
-         * @return Array
-         */
-        function _login($user, $passw) {
-                $ut = new utils();
-                $cmdSQL = "SELECT id, nome, email FROM pessoas WHERE
+    /**
+     * Funcao para efetuar verificacao do Login / Senha
+     * @access public
+     * @param $user String - Usuario
+     * @param $passw String - Senha
+     * @return Array
+     */
+    function _login($user, $passw) {
+        $ut = new utils();
+        $cmdSQL = "SELECT id, nome, email FROM pessoas WHERE
                                                 login = '" . $user . "' AND senha = '$passw'
                                                 AND status = 0";
-                $rs = parent::query($cmdSQL);
-                if ($rs && $rs->RecordCount() != 0) {
-                        $ret['usuid'] = $rs->Fields("id");
-                        $ret['usu'] = $rs->Fields("nome");
-                        $ret['email'] = $rs->Fields("email");
-                        return $ret;
-                } else {
-                        return array();
-                }
+        $rs = parent::query($cmdSQL);
+        if ($rs && $rs->RecordCount() != 0) {
+            $ret['usuid'] = $rs->Fields("id");
+            $ret['usu'] = $rs->Fields("nome");
+            $ret['email'] = $rs->Fields("email");
+            return $ret;
+        } else {
+            return array();
+        }
+    }
+
+    function getRsPessoasId($id = "") {
+        $sql = "SELECT * FROM pessoas ";
+
+        if ($id != "") {
+            $sql.= "WHERE id = $id";
         }
 
-        function getRsPessoasId($id = "") {
-                $sql = "SELECT * FROM pessoas ";
+        $sql.= "ORDER BY nome ASC";
+        return parent::query($sql);
+    }
 
-                if ($id != "") {
-                        $sql.= "WHERE id = $id";
-                }
+    function getRsPapeisId($id = "") {
+        $sql = "SELECT * FROM regras ";
 
-                $sql.= "ORDER BY nome ASC";
-                return parent::query($sql);
+        if ($id != "") {
+            $sql.= "WHERE id = $id";
         }
 
-        function getNextId() {
-                return parent::seed("pessoas", "id");
-        }
+        $sql.= "ORDER BY nome ASC";
+        return parent::query($sql);
+    }
 
-        function getSelectRegraGeral($select = "") {
-                $str = "<select name='regrageral' id='regrageral'>";
+    function getNextId() {
+        return parent::seed("pessoas", "id");
+    }
 
-                switch ($select) {
-                        case 0 : $str.="<option value='1'>Gerente</option>
+    function getSelectRegraGeral($select = "") {
+        $str = "<select name='regrageral' id='regrageral'>";
+
+        switch ($select) {
+            case 0 : $str.="<option value='1'>Gerente</option>
                                                    <option value='0' selected='selected'>Usuário</option>";
-                                break;
-                        case 1 : $str.="<option value='1' selected='selected'>Gerente</option>
+                break;
+            case 1 : $str.="<option value='1' selected='selected'>Gerente</option>
                                                    <option value='0'>Usuário</option>";
-                                break;
-                        default: $str.="<option value='1'>Gerente</option>
+                break;
+            default: $str.="<option value='1'>Gerente</option>
                                                     <option value='0' selected='selected'>Usuário</option>";
-                                break;
-                }
-
-                $str.="</select>";
-
-                return $str;
+                break;
         }
+
+        $str.="</select>";
+
+        return $str;
+    }
+
+    function getAutoCompletePessoa($id = '') {
+        $uti = new utils();
+
+        return $uti->getMultiselect(array("cod" => $id, "table" => 'pessoas', "key" => "id", "data" =>
+                    array('nome'), "name" => 'pessoa', "searchclass" => "admPessoas", "theme" => "",
+                    "utf8" => false, "min" => 1));
+    }
+
+    function getJSONPessoas($table, $param) {
+        $rs = parent::query("SELECT * FROM pessoas
+                            WHERE UPPER(nome) LIKE UPPER('%" . strtoupper($param->term) . "%') 
+                                    OR UPPER(email) LIKE UPPER('%" . strtoupper($param->term) . "%')
+                                    OR UPPER(login) LIKE UPPER('%" . strtoupper($param->term) . "%')
+                                    OR UPPER(cpf) LIKE UPPER('%" . strtoupper($param->term) . "%')
+                            LIMIT 10 OFFSET 0");
+        $json = '[';
+        $first = true;
+        while (!$rs->EOF) {
+            if (!$first) {
+                $json .= ',';
+            } else {
+                $first = false;
+            }
+            $json .= '{"id": ' . $rs->Fields("id") . ' , "value":"' . $rs->Fields("nome") . " " . $rs->Fields("lastname") . '", "username" :"' . $rs->Fields("username") . '", "email":"' . $rs->Fields("email") . '", "name":"' . $rs->Fields("nome") . '" }';
+            $rs->MoveNext();
+        }
+        $json .= ']';
+        echo $json;
+    }
 
 }

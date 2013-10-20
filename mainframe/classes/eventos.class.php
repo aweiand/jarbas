@@ -9,9 +9,8 @@ class eventos extends admEventos {
      * @param Array $param
      * @return String
      */
-    function setEventos($table, $param) {
+    function getEventos($table, $param) {
         GLOBAL $CFG;
-        $com = new comuns();
 
         if (isset($param->id)) {
             $rs = parent::getRsEventosId($param->id)->FetchObject();
@@ -24,122 +23,121 @@ class eventos extends admEventos {
             $id = "<input type='hidden' name='id' id='id' value='$param->id' />";
         }
 
-        if (isset($param->err))
-            $mens = $com->trataError($param->err);
-        elseif (isset($param->mens))
-            $mens = $com->trataMens($param->mens);
-        else
-            $mens = "";
+        $str = "   <fieldset>
+                        <legend>Cadastro / Alteração</legend>
+                        <div class='fullCenter'>
+                            <div class='leftFloat input-prepend'>
+                                <label>Pesquisar</label>
+                                <span class='add-on'><i class='icon-search'></i></span>
+                                <input class='input-block-level' name='pesq' id='pesq' type='text' placeholder='Pesquisar' />
+                            </div>
+                            <div class='rightFloat'>
+                                <br />
+                                <button class='btn btn-info btn-large'><i class='icon-ok'></i></button>
+                            </div>
+                        </div>
+                        <hr class='fullCenter' />
+                        
+                        <form id='frm-Insert-Simple' action='$CFG->affix/$CFG->lib/actions.php' method='POST'>
+                            <div class='fullCenter'>
+                                <div class='leftFloat' style='width:100%; text-align: left;'> 
+                                    <label for='nome'>Nome</label>
+                                    <input type='text' name='nome' id='nome' value='$rs->NOME' placeholder='digite um valor...' />
+                                    $id
+                                    <input type='hidden' name='table' id='table' value='pessoas' />        
+                                    <input type='hidden' name='action' value='_insUpdt' />
+                                    <br />
+                                    <span class='error alert alert-error' id='errNome' style='display: none;'>Campo Obrigatório!</span>
+                                </div>
 
-        $str = "   <form id='frm-Insert-Simple' action='$CFG->affix/$CFG->lib/actions.php' method='POST'>
-                                        <div class='fullCenter'>
-                                                <fieldset>
-                                                        <legend>Inserindo Evento</legend>
-                                                        $mens
-                                                        <div class='leftFloat'>                                                        
-                                                                <label for='nome'>Nome</label>
-                                                                <input type='text' name='nome' id='nome' value='$rs->NOME' placeholder='digite um valor...' />
-                                                                $id
-                                                                <input type='hidden' name='table' id='table' value='pessoas' />        
-                                                                <input type='hidden' name='action' value='_insUpdt' />
-                                                                <br />
-                                                                <span class='error alert alert-error' id='errNome' style='display: none;'>Campo Obrigatório!</span>
-                                                        </div>
-                                                        
-                                                </fieldset>
-                                                <br />
-                                                <div class='fullCenter'>
-                                                        <button class='btn btn-warning'>$btn</button>
-                                                </div>
-                                        </div>
-                                </form>";
-        return $str;
-    }
+                                <div class='leftFloat' style='text-align: left;'> 
+                                    <label for='tipo'>Tipo</label>                                                                
+                                    " . parent::getSelectTipo($rs->TIPO) . "
+                                </div>
 
-    /**
-     * Retorna uma lista com valores padrão e botões de ateração
-     * edição e deleção
-     * @global GLOBAL $CFG
-     * @param String $table
-     * @param Array $param
-     * @return string
-     */
-    function getEventos($table, $param) {
-        GLOBAL $CFG;
-        @session_start();
-        $_SESSION['return'] = "pg/eventos/getEventos/pessoas.php";
+                                <div class='leftFloat' style='text-align: left;'>
+                                    <label for='local'>Local</label>
+                                    <input type='text' name='local' id='local' value='$rs->LOCAL' />
+                                </div>
 
-        $com = new comuns();
+                                <div class='leftFloat' style='text-align: left;'> 
+                                    <label for='tipo'>Evento Pai</label>                                                                
+                                    " . parent::getSelectEvento($rs->EVENTOPAI) . "
+                                </div>
 
-        $str = $this->setEventos($table, $param);
-        $rs = parent::getRsEventosId();
+                                <div class='rightFloat' style='width:100%; text-align: left;'>                                                        
+                                    <label for='resumo'>Resumo</label>                                                                
+                                    <textarea name='resumo' id='resumo'>$rs->RESUMO</textarea>
+                                </div>
 
-        if (isset($param->err))
-            $mens = $com->trataError($param->err);
-        elseif (isset($param->mens))
-            $mens = $com->trataMens($param->mens);
-        else
-            $mens = "";
+                                <div class='leftFloat' style='text-align: left;'>                                                        
+                                    <label for='iniinscricao'>Abertura de Inscrições</label>
+                                    <input type='text' name='iniinscricao' id='iniinscricao' value='$rs->INIINSCRICAO' class='span4' />
+                                </div>
+                                
+                                <div class='rightFloat' style='text-align: left;'>                                                        
+                                    <label for='fiminscricao'>Fim de Inscrições</label>
+                                    <input type='text' name='fiminscricao' id='fiminscricao' value='$rs->FIMINSCRICAO' class='span4' />
+                                </div>
+                                
+                                <div class='leftFloat' style='text-align: left;'>                                                        
+                                    <label for='inievento'>Início do Evento</label>
+                                    <input type='text' name='inievento' id='inievento' value='$rs->INIEVENTO' class='span4' />
+                                </div>
+                                
+                                <div class='rightFloat' style='text-align: left;'>                                                        
+                                    <label for='fimevento'>Fim do evento</label>
+                                    <input type='text' name='fimevento' id='fimevento' value='$rs->FIMEVENTO' class='span4' />
+                                </div>
+                                
+                                <div class='leftFloat' style='text-align: left;'>                                                        
+                                    <label for='sala'>Sala</label>
+                                    " . parent::getSelectSala($rs->SALA) . "
+                                </div>
+                                
+                                <div class='rightFloat' style='text-align: left;'>                                                        
+                                    <label for='status'>Status</label>
+                                    <select name='status' id='status'>";
 
-        $str.= "<div class='fullCenter' style='margin-top: 5px; margin-bottom: 5px;'>
-                                        $mens
-                                        <button class='btn btn-primary' onclick='$(\"#frm-Insert-Simple\").animate({ height: \"toggle\", opacity: \"toggle\" }, \"slow\"); $(this).remove(); return false;'>Inserir</button>
-                             </div>
-                             <fieldset>
-                                <legend>Listaga de Eventos Cadastradas</legend>
-                                <table class='fullCenter table table-hover'  id='lst-field-full' cellpadding='10' cellspacing='10'>
-                                        <thead>
-                                                <tr>
-                                                        <th>
-                                                                #
-                                                        </th>
-                                                        <th>
-                                                                Nome
-                                                        </th>
-                                                        <th>
-                                                                Local
-                                                        </th>
-                                                        <th>
-                                                                &nbsp;
-                                                        </th>
-                                                </tr>
-                                        </thead>
-                                        <tbody>";
-
-        while ($o = $rs->FetchNextObject()) {
-            $str.="<tr>
-                                        <td>
-                                                $o->ID
-                                        </td>
-                                        <td>
-                                                $o->NOME
-                                        </td>
-                                        <td>
-                                                $o->LOCAL
-                                        </td>
-                                        <td>
-                                                <a class='btn' href='$CFG->www/pg/eventos/setEventos/eventos.php?id=$o->ID' title='Editar este Evento'>
-                                                        <i class='icon-edit'></i>
-                                                </a>
-                                                <a class='btn' href='#' title='Presenças no Evento'>
-                                                        <i class='icon-ok'></i>
-                                                </a>
-                                                <a class='btn' href='#' onclick=\"if (confirm('Você tem certeza?')) return true; return false;\" title='Deletar a Pessoa'>
-                                                        <i class='icon-remove'></i>
-                                                </a>
-                                        </td>
-                                </tr>";
+        switch ($rs->STATUS) {
+            case 1 :
+                $str.="<option value='1' selected='selected'>Ativa</option>
+                       <option value='0'>Deletada</option >";
+                break;
+            case -1 :
+                $str.="<option value='1'>Ativa</option>
+                       <option value='0' selected='selected'>Deletada</option >";
+                break;
+            default:
+                $str.="<option value='1' selected='selected'>Ativa</option>
+                       <option value='0'>Deletada</option >";
+                break;
         }
 
-        $str.= "        </tbody>
-                                </table>
-                        </fieldset>
-                        
-                        <script>
-                                $(function(){
-                                        tblShort('lst-field-full');
-                                })
-                        </script>";
+        $str.="                  </select>
+                                </div>
+
+                                <div class='fullCenter'>
+                                    <label>Logo do Evento</label>
+                                    <img src='' />
+                                    <input type='file' />
+                                </div>
+                                
+                                <div class='fullCenter'>
+                                    <button class='btn btn-primary'>$btn</button>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;
+                                    <button class='btn btn-danger'><i class='icon-warning-sign'></i> Cancelar</button>
+                                </div>
+                            </div>
+                        </form>
+                 </fieldset>
+                 
+                <script>
+                    $(function(){
+                        $('#fimevento, #inievento, #fiminscricao, #iniinscricao').datepicker();
+                    })
+                </script>";
+
         return $str;
     }
 

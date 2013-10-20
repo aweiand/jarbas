@@ -75,69 +75,76 @@ class comuns extends admComuns {
      */
     function getTipos($table, $param) {
         GLOBAL $CFG;
-        @session_start();
-        $_SESSION['return'] = "pg/comuns/getTipos/tipos.php";
 
-        $str = $this->setTipos($table, $param);
-        $rs = parent::getRsTableId("tipos");
-
-        if (isset($param->err))
-            $mens = $this->trataError($param->err);
-        elseif (isset($param->mens))
-            $mens = $this->trataMens($param->mens);
-        else
-            $mens = "";
-
-        $str.= "<div class='fullCenter' style='margin-top: 5px; margin-bottom: 5px;'>
-                                        $mens
-                                        <button class='btn btn-primary' onclick='$(\"#frm-Insert-Simple\").animate({ height: \"toggle\", opacity: \"toggle\" }, \"slow\"); $(this).remove(); return false;'>Inserir</button>
-                             </div>
-                             <fieldset>
-                                <legend>Lista de Tipos Cadastradas</legend>
-                                <table class='fullCenter table table-hover'  id='lst-field-full' cellpadding='10' cellspacing='10'>
-                                        <thead>
-                                                <tr>
-                                                        <th>
-                                                                #
-                                                        </th>
-                                                        <th>
-                                                                Nome
-                                                        </th>
-                                                        <th>
-                                                                &nbsp;
-                                                        </th>
-                                                </tr>
-                                        </thead>
-                                        <tbody>";
-
-        while ($o = $rs->FetchNextObject()) {
-            $str.="<tr>
-                                        <td>
-                                                $o->ID
-                                        </td>
-                                        <td>
-                                                $o->NOME
-                                        </td>
-                                        <td>
-                                                <a class='btn' href='$CFG->www/pg/comuns/setTipos/tipos.php?id=$o->ID' title='Editar este Tipo'>
-                                                        <i class='icon-edit'></i>
-                                                </a>
-                                                <a class='btn' href='#' onclick=\"if (confirm('Você tem certeza?')) return true; return false;\" title='Deletar a Pessoa'>
-                                                        <i class='icon-remove'></i>
-                                                </a>
-                                        </td>
-                                </tr>";
+        if (isset($param->id)) {
+            $rs = parent::getRsTableId("tipos", $param->id)->FetchObject();
+            $btn = "Alterar";
+            $id = "<input type='hidden' name='id' id='id' value='$param->id' />";
+        } else {
+            $param->id = parent::getNextId("tipos");
+            $rs = parent::getRsTableId("tipos", $param->id)->FetchObject();
+            $btn = "Cadastrar";
+            $id = "<input type='hidden' name='id' id='id' value='$param->id' />";
         }
 
-        $str.= "        </tbody>
-                                </table>
-                        </fieldset>
+        $str = "   <fieldset>
+                        <legend>Cadastro / Alteração</legend>
+                        <div class='fullCenter'>
+                            <div class='leftFloat input-prepend'>
+                                <label>Pesquisar</label>
+                                <span class='add-on'><i class='icon-search'></i></span>
+                                <input class='input-block-level' name='pesq' id='pesq' type='text' placeholder='Pesquisar' />
+                            </div>
+                            <div class='rightFloat'>
+                                <br />
+                                <button class='btn btn-info btn-large'><i class='icon-ok'></i></button>
+                            </div>
+                        </div>
+                        <hr class='fullCenter' />
                         
-                        <script>
-                                $(function(){
-                                        tblShort('lst-field-full');
-                                })
-                        </script>";
+                        <form id='frm-Insert-Simple' action='$CFG->affix/$CFG->lib/actions.php' method='POST'>
+                            <div class='fullCenter'>
+                                <div class='leftFloat' style='width:100%; text-align: left;'> 
+                                    <label for='nome'>Nome</label>
+                                    <input type='text' name='nome' id='nome' value='$rs->NOME' placeholder='digite um valor...' />
+                                    $id
+                                    <input type='hidden' name='table' id='table' value='pessoas' />        
+                                    <input type='hidden' name='action' value='_insUpdt' />
+                                    <br />
+                                    <span class='error alert alert-error' id='errNome' style='display: none;'>Campo Obrigatório!</span>
+                                </div>
+
+                                <div class='leftFloat' style='text-align: left;'>
+                                    <label for='status'>Status</label>
+                                    <select name='status' id='status'>";
+
+        switch ($rs->STATUS) {
+            case 1 :
+                $str.="<option value='1' selected='selected'>Ativa</option>
+                       <option value='0'>Deletada</option >";
+                break;
+            case -1 :
+                $str.="<option value='1'>Ativa</option>
+                       <option value='0' selected='selected'>Deletada</option >";
+                break;
+            default:
+                $str.="<option value='1' selected='selected'>Ativa</option>
+                       <option value='0'>Deletada</option >";
+                break;
+        }
+
+        $str.="            </select>
+                                </div>
+
+                                <br />
+                                <div class='fullCenter'>
+                                    <button class='btn btn-primary'>$btn</button>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;
+                                    <button class='btn btn-danger'><i class='icon-warning-sign'></i> Cancelar</button>
+                                </div>
+                            </div>
+                        </form>
+                 </fieldset>";
         return $str;
     }
 
@@ -204,69 +211,81 @@ class comuns extends admComuns {
      */
     function getSalas($table, $param) {
         GLOBAL $CFG;
-        @session_start();
-        $_SESSION['return'] = "pg/comuns/getSalas/tipos.php";
 
-        $str = $this->setSalas($table, $param);
-        $rs = parent::getRsTableId("salas");
-
-        if (isset($param->err))
-            $mens = $this->trataError($param->err);
-        elseif (isset($param->mens))
-            $mens = $this->trataMens($param->mens);
-        else
-            $mens = "";
-
-        $str.= "<div class='fullCenter' style='margin-top: 5px; margin-bottom: 5px;'>
-                                        $mens
-                                        <button class='btn btn-primary' onclick='$(\"#frm-Insert-Simple\").animate({ height: \"toggle\", opacity: \"toggle\" }, \"slow\"); $(this).remove(); return false;'>Inserir</button>
-                             </div>
-                             <fieldset>
-                                <legend>Lista de Tipos Cadastradas</legend>
-                                <table class='fullCenter table table-hover'  id='lst-field-full' cellpadding='10' cellspacing='10'>
-                                        <thead>
-                                                <tr>
-                                                        <th>
-                                                                #
-                                                        </th>
-                                                        <th>
-                                                                Nome
-                                                        </th>
-                                                        <th>
-                                                                &nbsp;
-                                                        </th>
-                                                </tr>
-                                        </thead>
-                                        <tbody>";
-
-        while ($o = $rs->FetchNextObject()) {
-            $str.="<tr>
-                                        <td>
-                                                $o->ID
-                                        </td>
-                                        <td>
-                                                $o->NOME
-                                        </td>
-                                        <td>
-                                                <a class='btn' href='$CFG->www/pg/comuns/setSalas/salas.php?id=$o->ID' title='Editar esta Sala'>
-                                                        <i class='icon-edit'></i>
-                                                </a>
-                                                <a class='btn' href='#' onclick=\"if (confirm('Você tem certeza?')) return true; return false;\" title='Deletar a Pessoa'>
-                                                        <i class='icon-remove'></i>
-                                                </a>
-                                        </td>
-                                </tr>";
+        if (isset($param->id)) {
+            $rs = parent::getRsTableId("salas", $param->id)->FetchObject();
+            $btn = "Alterar";
+            $id = "<input type='hidden' name='id' id='id' value='$param->id' />";
+        } else {
+            $param->id = parent::getNextId("salas");
+            $rs = parent::getRsTableId("salas", $param->id)->FetchObject();
+            $btn = "Cadastrar";
+            $id = "<input type='hidden' name='id' id='id' value='$param->id' />";
         }
 
-        $str.= "        </tbody>
-                                </table>
-                        </fieldset>
+        $str = "   <fieldset>
+                        <legend>Cadastro / Alteração</legend>
+                        <div class='fullCenter'>
+                            <div class='leftFloat input-prepend'>
+                                <label>Pesquisar</label>
+                                <span class='add-on'><i class='icon-search'></i></span>
+                                <input class='input-block-level' name='pesq' id='pesq' type='text' placeholder='Pesquisar' />
+                            </div>
+                            <div class='rightFloat'>
+                                <br />
+                                <button class='btn btn-info btn-large'><i class='icon-ok'></i></button>
+                            </div>
+                        </div>
+                        <hr class='fullCenter' />
                         
-                        <script>
-                                $(function(){
-                                        tblShort('lst-field-full');
-                                })
-                        </script>";
+                        <form id='frm-Insert-Simple' action='$CFG->affix/$CFG->lib/actions.php' method='POST'>
+                            <div class='fullCenter'>
+                                <div class='leftFloat' style='width:100%; text-align: left;'> 
+                                    <label for='nome'>Nome</label>
+                                    <input type='text' name='nome' id='nome' value='$rs->NOME' placeholder='digite um valor...' />
+                                    $id
+                                    <input type='hidden' name='table' id='table' value='pessoas' />        
+                                    <input type='hidden' name='action' value='_insUpdt' />
+                                    <br />
+                                    <span class='error alert alert-error' id='errNome' style='display: none;'>Campo Obrigatório!</span>
+                                </div>
+
+                                <div class='leftFloat' style='width:100%; text-align: left;'>
+                                    <label for='capacidade'>Capacidade</label>
+                                    <input type='number' name='capacidade' class='span2' id='capacidade' value='$rs->CAPACIDADE' placeholder='digite um valor...' />
+                                </div>
+                                
+                                <div class='leftFloat' style='width:100%; text-align: left;'>
+                                    <label for='status'>Status</label>
+                                    <select name='status' id='status' class='span2'>";
+
+        switch ($rs->STATUS) {
+            case 1 :
+                $str.="<option value='1' selected='selected'>Ativa</option>
+                       <option value='0'>Deletada</option >";
+                break;
+            case -1 :
+                $str.="<option value='1'>Ativa</option>
+                       <option value='0' selected='selected'>Deletada</option >";
+                break;
+            default:
+                $str.="<option value='1' selected='selected'>Ativa</option>
+                       <option value='0'>Deletada</option >";
+                break;
+        }
+
+        $str.="            </select>
+                                </div>
+
+                                <br />
+                                <div class='fullCenter'>
+                                    <button class='btn btn-primary'>$btn</button>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;
+                                    <button class='btn btn-danger'><i class='icon-warning-sign'></i> Cancelar</button>
+                                </div>
+                            </div>
+                        </form>
+                 </fieldset>";
         return $str;
     }
 
@@ -520,7 +539,7 @@ class comuns extends admComuns {
                             <a href='$CFG->www/act/pessoas/getPessoas/pessoas.php'>Dados do Usuário</a>
                         </li>
                         <li>
-                            <a href='$CFG->www/act/comuns/getPapeis/papeis.php'>Papéis</a>
+                            <a href='$CFG->www/act/pessoas/getPapeis/papeis.php'>Papéis</a>
                         </li>
                         <li>
                             <a href='$CFG->www/act/eventos/getEventos/eventos.php'>Eventos</a>
@@ -659,7 +678,7 @@ class comuns extends admComuns {
 
         return $str;
     }
-    
+
     function lancapresencas($table, $param) {
         GLOBAL $CFG;
         $pes = new admPessoas();
