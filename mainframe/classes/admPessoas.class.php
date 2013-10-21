@@ -85,6 +85,36 @@ class admPessoas extends database {
                     "utf8" => false, "min" => 1));
     }
 
+    function getAutoCompleteRegras($id = '') {
+        $uti = new utils();
+
+        return $uti->getMultiselect(array("cod" => $id, "table" => 'regras', "key" => "id", "data" =>
+                    array('nome'), "name" => 'regra', "searchclass" => "admPessoas", "theme" => "",
+                    "utf8" => false, "min" => 1, "getJsonDB" => "pessoas/getJSONRegras"));
+    }
+
+    function getJSONRegras($table, $param) {
+        $rs = parent::query("SELECT * FROM regras
+                                WHERE UPPER(nome) LIKE UPPER('%" . strtoupper($param->term) . "%') 
+                                    OR UPPER(descricao) LIKE UPPER('%" . strtoupper($param->term) . "%')
+                            LIMIT 10 OFFSET 0");
+        $json = '[';
+        $first = true;
+        while (!$rs->EOF) {
+            if (!$first) {
+                $json .= ',';
+            } else {
+                $first = false;
+            }
+            $json .= '{"id": ' . $rs->Fields("id") . ' , "value":"' . $rs->Fields("nome") . '",
+                        "username" :"' . $rs->Fields("nome") . '", "email":"' . $rs->Fields("descricao") . 
+                        '", "name":"' . $rs->Fields("nome") . '" }';
+            $rs->MoveNext();
+        }
+        $json .= ']';
+        echo $json;
+    }
+
     function getJSONPessoas($table, $param) {
         $rs = parent::query("SELECT * FROM pessoas
                             WHERE UPPER(nome) LIKE UPPER('%" . strtoupper($param->term) . "%') 
@@ -100,7 +130,9 @@ class admPessoas extends database {
             } else {
                 $first = false;
             }
-            $json .= '{"id": ' . $rs->Fields("id") . ' , "value":"' . $rs->Fields("nome") . " " . $rs->Fields("lastname") . '", "username" :"' . $rs->Fields("username") . '", "email":"' . $rs->Fields("email") . '", "name":"' . $rs->Fields("nome") . '" }';
+            $json .= '{"id": ' . $rs->Fields("id") . ' , "value":"' . $rs->Fields("nome") . '",
+                        "username" :"' . $rs->Fields("login") . '", "email":"' . $rs->Fields("email") . 
+                        '", "name":"' . $rs->Fields("nome") . '" }';
             $rs->MoveNext();
         }
         $json .= ']';

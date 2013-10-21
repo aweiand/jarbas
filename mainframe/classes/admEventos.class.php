@@ -36,13 +36,7 @@ class admEventos extends database {
 
     function getSelectEvento($id = "") {
         $uti = new utils();
-        $sql = "SELECT * FROM eventos ";
-
-        if ($id != "") {
-            $sql.= "WHERE id = $id";
-        }
-
-        $sql.= "ORDER BY nome ASC";
+        $sql = "SELECT * FROM eventos ORDER BY nome ASC";
 
         $str = $uti->getSelectDb($id, "eventos", "id", "nome", "evento", parent::query($sql));
 
@@ -51,13 +45,7 @@ class admEventos extends database {
 
     function getSelectTipo($id = "") {
         $uti = new utils();
-        $sql = "SELECT * FROM tipos ";
-
-        if ($id != "") {
-            $sql.= "WHERE id = $id";
-        }
-
-        $sql.= "ORDER BY nome ASC";
+        $sql = "SELECT * FROM tipos ORDER BY nome ASC";
 
         $str = $uti->getSelectDb($id, "tipos", "id", "nome", "tipo", parent::query($sql));
 
@@ -66,13 +54,7 @@ class admEventos extends database {
 
     function getSelectSala($id = "") {
         $uti = new utils();
-        $sql = "SELECT * FROM salas ";
-
-        if ($id != "") {
-            $sql.= "WHERE id = $id";
-        }
-
-        $sql.= "ORDER BY nome ASC";
+        $sql = "SELECT * FROM salas ORDER BY nome ASC";
 
         $str = $uti->getSelectDb($id, "salas", "id", "nome", "sala", parent::query($sql));
 
@@ -86,6 +68,37 @@ class admEventos extends database {
                     ORDER BY nome ASC";
 
         return parent::query($sql);
+    }
+
+    function getAutoCompleteEvento($id = '') {
+        $uti = new utils();
+
+        return $uti->getMultiselect(array("cod" => $id, "table" => 'eventos', "key" => "id", "data" =>
+                    array('nome'), "name" => 'evento', "searchclass" => "admEventos", "theme" => "",
+                    "utf8" => false, "min" => 1, "getJsonDB" => "eventos/getJSONEventos"));
+    }
+
+    function getJSONEventos($table, $param) {
+        $rs = parent::query("SELECT * FROM eventos
+                                WHERE UPPER(nome) LIKE UPPER('%" . strtoupper($param->term) . "%') 
+                                    OR UPPER(resumo) LIKE UPPER('%" . strtoupper($param->term) . "%') 
+                                    OR UPPER(local) LIKE UPPER('%" . strtoupper($param->term) . "%') 
+                            LIMIT 10 OFFSET 0");
+        $json = '[';
+        $first = true;
+        while (!$rs->EOF) {
+            if (!$first) {
+                $json .= ',';
+            } else {
+                $first = false;
+            }
+            $json .= '{"id": ' . $rs->Fields("id") . ' , "value":"' . $rs->Fields("nome") . '",
+                        "username" :"' . $rs->Fields("nome") . '", "email":"",
+                        "name":"' . $rs->Fields("nome") . '" }';
+            $rs->MoveNext();
+        }
+        $json .= ']';
+        echo $json;
     }
 
 }

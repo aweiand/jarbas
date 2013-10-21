@@ -15,37 +15,44 @@ class eventos extends admEventos {
         if (isset($param->id)) {
             $rs = parent::getRsEventosId($param->id)->FetchObject();
             $btn = "Alterar";
-            $id = "<input type='hidden' name='id' id='id' value='$param->id' />";
         } else {
             $param->id = parent::getNextId();
             $rs = parent::getRsEventosId($param->id)->FetchObject();
             $btn = "Cadastrar";
-            $id = "<input type='hidden' name='id' id='id' value='$param->id' />";
         }
+
+        if (isset($param->err))
+            $mens = $com->trataError($param->err);
+        elseif (isset($param->mens))
+            $mens = $com->trataMens($param->mens);
+        else
+            $mens = "";
 
         $str = "   <fieldset>
                         <legend>Cadastro / Alteração</legend>
+                        $mens
                         <div class='fullCenter'>
-                            <div class='leftFloat input-prepend'>
+                            <div class='leftFloat'>
                                 <label>Pesquisar</label>
-                                <span class='add-on'><i class='icon-search'></i></span>
-                                <input class='input-block-level' name='pesq' id='pesq' type='text' placeholder='Pesquisar' />
+                                " . parent::getAutoCompleteEvento(null) . "
                             </div>
+                            
                             <div class='rightFloat'>
                                 <br />
-                                <button class='btn btn-info btn-large'><i class='icon-ok'></i></button>
+                                <button onclick='pesquisaEventos()' class='btn btn-info btn-large'><i class='icon-ok'></i></button>
                             </div>
                         </div>
                         <hr class='fullCenter' />
                         
-                        <form id='frm-Insert-Simple' action='$CFG->affix/$CFG->lib/actions.php' method='POST'>
+                        <form action='$CFG->affix/$CFG->lib/actions.php' method='POST' enctype='multipart/form-data'>
                             <div class='fullCenter'>
                                 <div class='leftFloat' style='width:100%; text-align: left;'> 
                                     <label for='nome'>Nome</label>
                                     <input type='text' name='nome' id='nome' value='$rs->NOME' placeholder='digite um valor...' />
-                                    $id
-                                    <input type='hidden' name='table' id='table' value='pessoas' />        
-                                    <input type='hidden' name='action' value='_insUpdt' />
+                                    <input type='hidden' name='id' id='id' value='$param->id'/>
+                                    <input type='hidden' name='field' id='field' value='id'/>
+                                    <input type='hidden' name='table' id='table' value='eventos'/>
+                                    <input type='hidden' name='action' id='action' value='_InsUpdt'/>
                                     <br />
                                     <span class='error alert alert-error' id='errNome' style='display: none;'>Campo Obrigatório!</span>
                                 </div>

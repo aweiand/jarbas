@@ -16,12 +16,10 @@ class pessoas extends admPessoas {
         if (isset($param->id)) {
             $rs = parent::getRsPessoasId($param->id)->FetchObject();
             $btn = "Alterar";
-            $id = "<input type='hidden' name='id' id='id' value='$param->id' />";
         } else {
             $param->id = parent::getNextId();
             $rs = parent::getRsPessoasId($param->id)->FetchObject();
             $btn = "Cadastrar";
-            $id = "<input type='hidden' name='id' id='id' value='$param->id' />";
         }
 
         if (isset($param->err))
@@ -41,20 +39,21 @@ class pessoas extends admPessoas {
                             
                             <div class='rightFloat'>
                                 <br />
-                                <button class='btn btn-info btn-large'><i class='icon-ok'></i></button>
+                                <button onclick='pesquisaPessoa()' class='btn btn-info btn-large'><i class='icon-ok'></i></button>
                             </div>
                         </div>
                         <hr class='fullCenter' />
                         
-                        <form id='frm-Insert-Simple' action='$CFG->affix/$CFG->lib/actions.php' method='POST'>
+                        <form action='$CFG->affix/$CFG->lib/actions.php' method='POST'>
                             <div class='fullCenter'>
                                 $mens
                                 <div class='leftFloat' style='width:100%; text-align: left;'> 
                                     <label for='nome'>Nome</label>
                                     <input type='text' name='nome' id='nome' value='$rs->NOME' placeholder='digite um valor...' />
-                                    $id
-                                    <input type='hidden' name='table' id='table' value='pessoas' />        
-                                    <input type='hidden' name='action' value='_insUpdt' />
+                                    <input type='hidden' name='id' id='id' value='$param->id'/>
+                                    <input type='hidden' name='field' id='field' value='id'/>
+                                    <input type='hidden' name='table' id='table' value='pessoas'/>
+                                    <input type='hidden' name='action' id='action' value='_InsUpdt'/>
                                     <br />
                                     <span class='error alert alert-error' id='errNome' style='display: none;'>Campo Obrigatório!</span>
                                 </div>
@@ -87,8 +86,8 @@ class pessoas extends admPessoas {
                                 <br />
                                 <div class='fullCenter'>
                                     <button class='btn btn-primary'>$btn</button>
-                                        &nbsp;&nbsp;&nbsp;&nbsp;
-                                    <button class='btn btn-danger'><i class='icon-warning-sign'></i> Cancelar</button>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;
+                                    <button class='btn btn-danger'><i class='icon-warning-sign'></i> Excluir</button>
                                 </div>
                             </div>
                         </form>
@@ -102,25 +101,23 @@ class pessoas extends admPessoas {
         if (isset($param->id)) {
             $rs = parent::getRsPapeisId($param->id)->FetchObject();
             $btn = "Alterar";
-            $id = "<input type='hidden' name='id' id='id' value='$param->id' />";
         } else {
             $param->id = parent::getNextId();
             $rs = parent::getRsPapeisId($param->id)->FetchObject();
             $btn = "Cadastrar";
-            $id = "<input type='hidden' name='id' id='id' value='$param->id' />";
         }
 
         $str = "   <fieldset>
                         <legend>Cadastro / Alteração</legend>
                         <div class='fullCenter'>
-                            <div class='leftFloat input-prepend'>
+                            <div class='leftFloat'>
                                 <label>Pesquisar</label>
-                                <span class='add-on'><i class='icon-search'></i></span>
-                                <input class='input-block-level' name='pesq' id='pesq' type='text' placeholder='Pesquisar' />
+                                " . parent::getAutoCompleteRegras(null) . "
                             </div>
+                            
                             <div class='rightFloat'>
                                 <br />
-                                <button class='btn btn-info btn-large'><i class='icon-ok'></i></button>
+                                <button onclick='pesquisaRegra()' class='btn btn-info btn-large'><i class='icon-ok'></i></button>
                             </div>
                         </div>
                         <hr class='fullCenter' />
@@ -130,9 +127,10 @@ class pessoas extends admPessoas {
                                 <div class='leftFloat' style='width:100%; text-align: left;'> 
                                     <label for='nome'>Nome</label>
                                     <input type='text' name='nome' id='nome' value='$rs->NOME' placeholder='digite um valor...' />
-                                    $id
-                                    <input type='hidden' name='table' id='table' value='pessoas' />        
-                                    <input type='hidden' name='action' value='_insUpdt' />
+                                    <input type='hidden' name='table' id='table' value='regras' />        
+                                    <input type='hidden' name='action' value='_InsUpdt' />
+                                    <input type='hidden' name='field' value='id' />
+                                    <input type='hidden' name='id' value='$param->id' />
                                     <br />
                                     <span class='error alert alert-error' id='errNome' style='display: none;'>Campo Obrigatório!</span>
                                 </div>
@@ -168,7 +166,7 @@ class pessoas extends admPessoas {
                                 <div class='fullCenter'>
                                     <button class='btn btn-primary'>$btn</button>
                                         &nbsp;&nbsp;&nbsp;&nbsp;
-                                    <button class='btn btn-danger'><i class='icon-warning-sign'></i> Cancelar</button>
+                                    <button class='btn btn-danger'><i class='icon-warning-sign'></i> Excluir</button>
                                 </div>
                             </div>
                         </form>
@@ -248,6 +246,98 @@ class pessoas extends admPessoas {
                     </form>
                     
                 </fieldset>";
+        return $str;
+    }
+
+    function meusdados($table, $param) {
+        GLOBAL $CFG;
+        $com = new comuns();
+
+        $rs = parent::getRsPessoasId($_SESSION['usuid'])->FetchObject();
+
+        if (isset($param->err))
+            $mens = $com->trataError($param->err);
+        elseif (isset($param->mens))
+            $mens = $com->trataMens($param->mens);
+        else
+            $mens = "";
+
+        $str = "<fieldset>
+                    <legend>Minhas Informações</legend>
+                    $mens
+                    <div id='tabs'>
+                      <ul>
+                        <li><a href='#meusdados'>Meus Dados</a></li>
+                        <li><a href='#meuseventos'>Meus Eventos</a></li>
+                      </ul>
+                      
+                      <div id='meusdados'>
+                            <form action='$CFG->affix/$CFG->lib/actions.php' method='POST'>
+                                <table class='table'>
+                                    <tr>
+                                        <td>
+                                            <label>Nome</label>
+                                        </td>
+                                        <td>
+                                            <input type='text' name='nome' id='nome' value='$rs->NOME'/>
+                                            <input type='hidden' name='id' id='id' value='$rs->ID'/>
+                                            <input type='hidden' name='field' id='field' value='id'/>
+                                            <input type='hidden' name='table' id='table' value='pessoas'/>
+                                            <input type='hidden' name='action' id='action' value='_InsUpdt'/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label>E-mail</label>
+                                        </td>
+                                        <td>
+                                            <input type='email' name='email' id='email' value='$rs->EMAIL' />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label>CPF</label>
+                                        </td>
+                                        <td>
+                                            <input type='text' name='cpf' id='cpf' value='$rs->CPF' />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label>Login</label>
+                                        </td>
+                                        <td>
+                                            <input type='text' name='login' id='login' value='$rs->LOGIN' />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label>Senha</label>
+                                        </td>
+                                        <td>
+                                            <input type='password' name='senha' id='senha' value='$rs->SENHA' />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan='4' style='text-align:center'>
+                                            <input type='submit' class='btn btn-primary' value='Alterar' />
+                                        </td>
+                                    </tr>                            
+                                </table>
+                            </form>
+                        </div>
+                        
+                        <div id='meuseventos'>
+                            TODO: Listar os eventos que estou inscrito e talvez um botão com link para imprimir certificado
+                        </div>
+                    
+                    </div>
+                </fieldset>
+                <script>
+                    $(function() {
+                          $('#tabs').tabs();
+                    });
+                </script>";
         return $str;
     }
 

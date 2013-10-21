@@ -145,7 +145,7 @@ class database {
      */
     function gravaLog($action, $dado, $table = 'jarbas') {
         $dado = str_replace('\'', ' ', $dado);
-        $cmdSQL = "INSERT INTO " . $table . ".logs VALUES(" . $this->seed('log', 'id') . ",'" . $action . "','" . $dado . "',NOW())";
+        $cmdSQL = "INSERT INTO " . $table . ".logs VALUES(" . $this->seed('logs', 'id') . ",'" . $action . "','" . $dado . "',NOW())";
         if ($this->query($cmdSQL))
             return true;
         else

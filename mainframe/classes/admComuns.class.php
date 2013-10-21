@@ -23,4 +23,63 @@ class admComuns extends database {
         return parent::seed($table, "id");
     }
 
+    function getAutoCompleteSalas($id = '') {
+        $uti = new utils();
+
+        return $uti->getMultiselect(array("cod" => $id, "table" => 'salas', "key" => "id", "data" =>
+                    array('nome'), "name" => 'sala', "searchclass" => "admComuns", "theme" => "",
+                    "utf8" => false, "min" => 1, "getJsonDB" => "comuns/getJSONSalas"));
+    }
+
+    function getJSONSalas($table, $param) {
+        $rs = parent::query("SELECT * FROM salas
+                                WHERE UPPER(nome) LIKE UPPER('%" . strtoupper($param->term) . "%') 
+                                    OR capacidade = " . intval($param->term) . "
+                            LIMIT 10 OFFSET 0");
+        $json = '[';
+        $first = true;
+        while (!$rs->EOF) {
+            if (!$first) {
+                $json .= ',';
+            } else {
+                $first = false;
+            }
+            $json .= '{"id": ' . $rs->Fields("id") . ' , "value":"' . $rs->Fields("nome") . '",
+                        "username" :"' . $rs->Fields("nome") . '", "email":"' . $rs->Fields("capacidade") .
+                    '", "name":"' . $rs->Fields("nome") . '" }';
+            $rs->MoveNext();
+        }
+        $json .= ']';
+        echo $json;
+    }
+
+    function getAutoCompleteTipos($id = '') {
+        $uti = new utils();
+
+        return $uti->getMultiselect(array("cod" => $id, "table" => 'tipos', "key" => "id", "data" =>
+                    array('nome'), "name" => 'tipo', "searchclass" => "admComuns", "theme" => "",
+                    "utf8" => false, "min" => 1, "getJsonDB" => "comuns/getJSONTipos"));
+    }
+
+    function getJSONTipos($table, $param) {
+        $rs = parent::query("SELECT * FROM tipos
+                                WHERE UPPER(nome) LIKE UPPER('%" . strtoupper($param->term) . "%') 
+                            LIMIT 10 OFFSET 0");
+        $json = '[';
+        $first = true;
+        while (!$rs->EOF) {
+            if (!$first) {
+                $json .= ',';
+            } else {
+                $first = false;
+            }
+            $json .= '{"id": ' . $rs->Fields("id") . ' , "value":"' . $rs->Fields("nome") . '",
+                        "username" :"' . $rs->Fields("nome") . '", "email":" ",
+                        "name":"' . $rs->Fields("nome") . '" }';
+            $rs->MoveNext();
+        }
+        $json .= ']';
+        echo $json;
+    }
+
 }

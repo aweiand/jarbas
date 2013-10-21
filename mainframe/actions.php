@@ -11,7 +11,7 @@ require_once "autoload.php";
  */
 
 if (isset($_SESSION['return']))
-    $retorno = "../" . $_SESSION['return'];
+    $retorno = "../../" . $_SESSION['return'];
 elseif (isset($_SERVER['HTTP_REFERER'])) {
     $retorno = explode("?", $_SERVER['HTTP_REFERER']);
     $retorno = $retorno[0];
@@ -199,5 +199,4 @@ if (isset($_POST['action'])) {
     }
 }
 
-
-
+header("Location: $retorno?mens=ops");
