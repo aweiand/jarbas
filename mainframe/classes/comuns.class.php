@@ -597,6 +597,14 @@ class comuns extends admComuns {
         return $str;
     }
 
+    /**
+     * 
+     * @global GLOBAL $CFG
+     * @param type $table
+     * @param type $param
+     * @return string
+     * @deprecated since version 0.1 - Esta função não será necessária
+     */
     function vinculopapeiseventos($table, $param) {
         GLOBAL $CFG;
         $pes = new admPessoas();
@@ -655,19 +663,23 @@ class comuns extends admComuns {
         $pes = new admPessoas();
         $evnt = new admEventos();
 
+        if (!isset($param->evento)) {
+            $param->evento = 0;
+        }
+
         $str = "<fieldset>
                     <legend>Matrícula de Pessoas em Eventos</legend>
                           
                     <div class='fullCenter'>
                     
-                        <div class='span12' style='text-align: right;'>
+                        <div class='span12' style='text-align: right; margin-bottom: 40px'>
                             <label>Evento</label>
-                            " . $evnt->getSelectEvento() . "
+                            " . $evnt->getSelectEvento($param->evento, "class='span8' onchange='recarregaPaginaEvnt()'") . "
                         </div>
                     
                         <div class='span4'>
                             <label>Pessoas</label>
-                            <select name='papel' id='papel' multiple>";
+                            <select name='pessoas' id='pessoas' multiple>";
 
         $rs = $pes->getRsPessoasId();
         while ($o = $rs->FetchNextObject()) {
@@ -678,19 +690,23 @@ class comuns extends admComuns {
                         </div>
                         
                         <div class='span4' style='width: 29%;'>
-                            <button class='btn btn-primary'>Vincular >></button>
+                            <button class='btn btn-primary' onclick='vinculaPessoaEvento()'>Vincular >></button>
                             <br />
                             <br />
-                            <button class='btn btn-warning'><< Desvincular</button>
+                            <label>Papel</label>
+                            " . parent::getSelectPapel(8) . "
+                            <br />
+                            <br />
+                            <button class='btn btn-warning' onclick='desvinculaPessoaEvento()'><< Desvincular</button>
                         </div>
                         
                         <div class='span4'>
                             <label>Pessoas no Evento</label>
-                            <select name='pessoa' id='pessoa' multiple>";
+                            <select name='pessoaEvento' id='pessoaEvento' multiple>";
 
-        $rs = $evnt->getRsPessoasEvento(0);
+        $rs = $evnt->getRsPessoasEvento($param->evento);
         while ($o = $rs->FetchNextObject()) {
-            $str.= "            <option value='$o->ID'>$o->NOME</option >";
+            $str.= "            <option value='$o->ID'>$o->NOME ($o->NOMER)</option >";
         }
 
         $str.="             </select>
@@ -705,48 +721,73 @@ class comuns extends admComuns {
 
     function lancapresencas($table, $param) {
         GLOBAL $CFG;
+        $_SESSION['return'] = "pg/comuns/lancapresencas/Digitando_Presencas.php";
+        $pes = new admPessoas();
+        $evnt = new admEventos();
+
+        if (!isset($param->evento)) {
+            $param->evento = 0;
+        }
+
+        if (isset($param->err))
+            $mens = $this->trataError($param->err);
+        elseif (isset($param->mens))
+            $mens = $this->trataMens($param->mens);
+        else
+            $mens = "";
+
+        $str = "<fieldset>
+                    <legend>Marcação de Presenças</legend>
+                    $mens
+                    <div class='fullCenter'>
+                    
+                        <form action='$CFG->affix/$CFG->lib/actions.php' method='POST'>
+                            <input type='hidden' name='action' value='MarcaPresencaEvento' />
+
+                            <div class='span11' style='text-align: right;'>
+                                <label>Evento</label>
+                                " . $evnt->getSelectEvento($param->evento, "class='span8' onchange='recarregaPaginaEvnt()'") . "
+                            </div>
+
+                            <div class='span11'>
+                                <label>Pessoas Presentes no Evento</label>
+                                <ul>";
+
+        $rs = $evnt->getRsPessoasEvento($param->evento);
+        while ($o = $rs->FetchNextObject()) {
+            $str.= "                <li>
+                                        $o->NOME <br />
+                                        " . $evnt->getRadioPresenteEvento($param->evento, $o->ID) . "
+                                    </li>";
+        }
+
+        $str.="                 </ul>
+                            </div>
+                        
+                            <div class='span11' style='text-align: center;'>
+                                <button class='btn btn-primary'>Marcar Presencas</button>
+                            </div>
+                        </form>
+                    </div>
+                    
+                </fieldset>";
+
+        return $str;
+    }
+
+    function impressaodemateriais($table, $param) {
+        GLOBAL $CFG;
         $pes = new admPessoas();
         $evnt = new admEventos();
 
         $str = "<fieldset>
-                    <legend>Matrícula de Pessoas em Eventos</legend>
+                    <legend>Impressão de Materiais para o Evento</legend>
                           
                     <div class='fullCenter'>
                     
                         <div class='span12' style='text-align: right;'>
                             <label>Evento</label>
                             " . $evnt->getSelectEvento() . "
-                        </div>
-                    
-                        <div class='span4'>
-                            <label>Pessoas</label>
-                            <select name='papel' id='papel' multiple>";
-
-        $rs = $pes->getRsPessoasId();
-        while ($o = $rs->FetchNextObject()) {
-            $str.= "            <option value='$o->ID'>$o->NOME</option >";
-        }
-
-        $str.="             </select>
-                        </div>
-                        
-                        <div class='span4' style='width: 29%;'>
-                            <button class='btn btn-primary'>Vincular >></button>
-                            <br />
-                            <br />
-                            <button class='btn btn-warning'><< Desvincular</button>
-                        </div>
-                        
-                        <div class='span4'>
-                            <label>Pessoas Presentes no Evento</label>
-                            <select name='pessoa' id='pessoa' multiple>";
-
-        $rs = $evnt->getRsPessoasEvento(0);
-        while ($o = $rs->FetchNextObject()) {
-            $str.= "            <option value='$o->ID'>$o->NOME</option >";
-        }
-
-        $str.="             </select>
                         </div>
                         
                     </div>

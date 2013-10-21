@@ -196,6 +196,67 @@ if (isset($_POST['action'])) {
                     header("Location: $retorno?mens=OK");
                 }
             } break;
+
+        case "matriculaEvento" : {
+                $pessoa = explode(",", $_POST['pessoas']);
+                foreach ($pessoa as $p) {
+                    try {
+                        $db->_insrt("inscricoes", array("pessoa" => $p,
+                            "evento" => $_POST['evento'],
+                            "regra" => $_POST['regra']));
+                    } catch (exception $e) {
+                        echo "Ops, houve um erro.... $e";
+                        exit();
+                    }
+                }
+
+                echo "Oba!";
+                exit();
+            } break;
+
+        case "desMatriculaEvento" : {
+                try {
+                    $db->command("DELETE FROM inscricoes WHERE pessoa
+                                    IN ({$_POST['pessoas']}) AND evento = {$_POST['evento']}");
+                } catch (exception $e) {
+                    echo "Ops, houve um erro.... $e";
+                    exit();
+                }
+
+                echo "Oba!";
+                exit();
+            } break;
+
+        case "MarcaPresencaEvento" : {
+                foreach ($_POST['pessoa'] as $id => $presenca) {
+                    if ($db->query("SELECT id FROM presencas WHERE pessoa = $id AND evento = {$_POST['evento']}")->RecordCount() != 0) {
+                        try {
+                            $db->_updt("presencas", array(
+                                "presente" => $presenca,
+                                "userid" => $_SESSION['usuid']
+                                    ), "pessoa = $id AND evento = {$_POST['evento']}");
+                        } catch (exception $e) {
+                            header("Location: $retorno?evento={$_POST['evento']}&err=$e");
+                            exit();
+                        }
+                    } else {
+                        try {
+                            $db->_insrt("presencas", array(
+                                "evento" => $_POST['evento'],
+                                "pessoa" => $id,
+                                "presente" => $presenca,
+                                "userid" => $_SESSION['usuid']
+                            ));
+                        } catch (exception $e) {
+                            header("Location: $retorno?evento={$_POST['evento']}&err=$e");
+                            exit();
+                        }
+                    }
+                }
+
+                header("Location: $retorno?evento={$_POST['evento']}&mens=OK");
+                exit();
+            } break;
     }
 }
 

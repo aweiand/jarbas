@@ -34,11 +34,11 @@ class admEventos extends database {
         return parent::seed("eventos", "id");
     }
 
-    function getSelectEvento($id = "") {
+    function getSelectEvento($id = "", $extra = "") {
         $uti = new utils();
         $sql = "SELECT * FROM eventos ORDER BY nome ASC";
 
-        $str = $uti->getSelectDb($id, "eventos", "id", "nome", "evento", parent::query($sql));
+        $str = $uti->getSelectDb($id, "eventos", "id", "nome", "evento", parent::query($sql), false, $extra);
 
         return $str;
     }
@@ -62,12 +62,42 @@ class admEventos extends database {
     }
 
     function getRsPessoasEvento($evento) {
-        $sql = "SELECT * FROM inscricoes i
+        $sql = "SELECT p.*, r.nome as nomer FROM inscricoes i
                     INNER JOIN pessoas p ON (i.pessoa = p.id)
+                    INNER JOIN regras r ON (i.regra = r.id)
                 WHERE i.evento = $evento
                     ORDER BY nome ASC";
 
         return parent::query($sql);
+    }
+
+    function getRadioPresenteEvento($evento, $pessoa) {
+        $presente = parent::query("SELECT presente FROM presencas WHERE pessoa = $pessoa AND evento = $evento");
+
+        if ($presente->RecordCount() == 0) {
+            return "<label title='Presente'>
+                        Presente <input type='radio' name='pessoa[$pessoa]' id='$pessoa' value='1' />
+                    </label>
+                    <label title='Ausente'>
+                        Ausente <input type='radio' name='pessoa[$pessoa]' id='$pessoa' value='0' />
+                    </label>";
+        }
+
+        if (!$presente->Fields(0)) {
+            return "<label title='Presente'>
+                        Presente <input type='radio' name='pessoa[$pessoa]' id='$pessoa' value='1' />
+                    </label>
+                    <label title='Ausente'>
+                        Ausente <input type='radio' name='pessoa[$pessoa]' id='$pessoa' value='0' checked='checked' />
+                    </label>";
+        } else {
+            return "<label title='Presente'>
+                        Presente <input type='radio' name='pessoa[$pessoa]' id='$pessoa' value='1' checked='checked' />
+                    </label>
+                    <label title='Ausente'>
+                        Ausente <input type='radio' name='pessoa[$pessoa]' id='$pessoa' value='0' />
+                    </label>";
+        }
     }
 
     function getAutoCompleteEvento($id = '') {

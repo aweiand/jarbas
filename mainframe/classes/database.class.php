@@ -143,7 +143,7 @@ class database {
      * @param String $dado - dados a serem gravados
      * @return bool
      */
-    function gravaLog($action, $dado, $table = 'jarbas') {
+    function gravaLog($action, $dado, $table = 'public') {
         $dado = str_replace('\'', ' ', $dado);
         $cmdSQL = "INSERT INTO " . $table . ".logs VALUES(" . $this->seed('logs', 'id') . ",'" . $action . "','" . $dado . "',NOW())";
         if ($this->query($cmdSQL))

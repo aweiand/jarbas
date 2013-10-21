@@ -82,4 +82,13 @@ class admComuns extends database {
         echo $json;
     }
 
+    function getSelectPapel($id = '') {
+        $uti = new utils();
+        $sql = "SELECT * FROM regras ORDER BY nome ASC";
+
+        $str = $uti->getSelectDb($id, "regras", "id", "nome", "regra", parent::query($sql));
+
+        return $str;
+    }
+
 }

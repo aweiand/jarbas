@@ -37,15 +37,15 @@ if (isset($_SESSION['usuid'])) {
         <li <?php if (strpos($_SERVER['REQUEST_URI'], 'cadastroalteracao/Cadastros_e_Alteracoes.php')) echo 'class="ui-state-focus"' ?>>
             <a href="<?= $CFG->www ?>pg/comuns/cadastroalteracao/Cadastros_e_Alteracoes.php">Cadastro / Alteração</a>
         </li>
-        <li <?php if (strpos($_SERVER['REQUEST_URI'], 'vinculopapeiseventos/Papeis_e_Eventos.php')) echo 'class="ui-state-focus"' ?>>
-            <a href="<?= $CFG->www ?>pg/comuns/vinculopapeiseventos/Papeis_e_Eventos.php">Papéis / Eventos</a>
-        </li>
         <li <?php if (strpos($_SERVER['REQUEST_URI'], 'vinculopessoaseventos/Pessoas_e_Eventos.php')) echo 'class="ui-state-focus"' ?>>
             <a href="<?= $CFG->www ?>pg/comuns/vinculopessoaseventos/Pessoas_e_Eventos.php">Pessoas / Eventos</a>
         </li>
         <li <?php if (strpos($_SERVER['REQUEST_URI'], 'lancapresencas/Digitando_Presencas.php')) echo 'class="ui-state-focus"' ?>>
             <a href="<?= $CFG->www ?>pg/comuns/lancapresencas/Digitando_Presencas.php">Presenças</a>
         </li>
+        <li <?php if (strpos($_SERVER['REQUEST_URI'], 'impressaodemateriais/Impressoes_de_Materiais.php')) echo 'class="ui-state-focus"' ?>>
+            <a href="<?= $CFG->www ?>pg/comuns/impressaodemateriais/Impressoes_de_Materiais.php">Impressões</a>
+        </li>        
         <li>
             <a href="<?= $CFG->www ?>mainframe/actions.php?action=logoff">Sair</a>
         </li>                    
