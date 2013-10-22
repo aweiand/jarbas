@@ -15,10 +15,16 @@ class eventos extends admEventos {
         if (isset($param->id)) {
             $rs = parent::getRsEventosId($param->id)->FetchObject();
             $btn = "Alterar";
+            if ($rs->LOGO != "") {
+                $logo = "<img src='$CFG->www/assets/data/$rs->LOGO' width='150' />";
+            } else {
+                $logo = "";
+            }
         } else {
             $param->id = parent::getNextId();
             $rs = parent::getRsEventosId($param->id)->FetchObject();
             $btn = "Cadastrar";
+            $logo = "";
         }
 
         if (isset($param->err))
@@ -52,7 +58,7 @@ class eventos extends admEventos {
                                     <input type='hidden' name='id' id='id' value='$param->id'/>
                                     <input type='hidden' name='field' id='field' value='id'/>
                                     <input type='hidden' name='table' id='table' value='eventos'/>
-                                    <input type='hidden' name='action' id='action' value='_InsUpdt'/>
+                                    <input type='hidden' name='action' id='action' value='_InsUpdtEventos'/>
                                     <br />
                                     <span class='error alert alert-error' id='errNome' style='display: none;'>Campo Obrigatório!</span>
                                 </div>
@@ -79,22 +85,22 @@ class eventos extends admEventos {
 
                                 <div class='leftFloat' style='text-align: left;'>                                                        
                                     <label for='iniinscricao'>Abertura de Inscrições</label>
-                                    <input type='text' name='iniinscricao' id='iniinscricao' value='$rs->INIINSCRICAO' class='span4' />
+                                    <input type='text' name='iniinscricao' id='iniinscricao' value='$rs->INIINSCRICAO' class='span6' />
                                 </div>
                                 
                                 <div class='rightFloat' style='text-align: left;'>                                                        
                                     <label for='fiminscricao'>Fim de Inscrições</label>
-                                    <input type='text' name='fiminscricao' id='fiminscricao' value='$rs->FIMINSCRICAO' class='span4' />
+                                    <input type='text' name='fiminscricao' id='fiminscricao' value='$rs->FIMINSCRICAO' class='span6' />
                                 </div>
                                 
                                 <div class='leftFloat' style='text-align: left;'>                                                        
                                     <label for='inievento'>Início do Evento</label>
-                                    <input type='text' name='inievento' id='inievento' value='$rs->INIEVENTO' class='span4' />
+                                    <input type='text' name='inievento' id='inievento' value='$rs->INIEVENTO' class='span6' />
                                 </div>
                                 
                                 <div class='rightFloat' style='text-align: left;'>                                                        
                                     <label for='fimevento'>Fim do evento</label>
-                                    <input type='text' name='fimevento' id='fimevento' value='$rs->FIMEVENTO' class='span4' />
+                                    <input type='text' name='fimevento' id='fimevento' value='$rs->FIMEVENTO' class='span6' />
                                 </div>
                                 
                                 <div class='leftFloat' style='text-align: left;'>                                                        
@@ -126,11 +132,16 @@ class eventos extends admEventos {
 
                                 <div class='fullCenter'>
                                     <label>Logo do Evento</label>
-                                    <img src='' />
-                                    <input type='file' />
+                                    $logo
+                                    <input type='file' name='logo' id='logo' />
                                 </div>
                                 
                                 <div class='fullCenter'>
+                                    <label>Atividades do Evento</label>
+                                    " . parent::getRsAtividadesDoEvento($param->id) . "
+                                </div>
+                                
+                                <div class='fullCenter' style='margin-top: 30px'>
                                     <button class='btn btn-primary'>$btn</button>
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                     <button class='btn btn-danger'><i class='icon-warning-sign'></i> Cancelar</button>
@@ -141,7 +152,17 @@ class eventos extends admEventos {
                  
                 <script>
                     $(function(){
-                        $('#fimevento, #inievento, #fiminscricao, #iniinscricao').datepicker();
+                        $('#fimevento, #inievento, #fiminscricao, #iniinscricao').datetimepicker({
+                            timeFormat: 'HH:mm',
+                            dateFormat: 'dd/mm/yy',
+                            timeOnlyTitle: 'time only title',
+                            timeText: 'Horário',
+                            hourText: 'Hora',
+                            minuteText: 'Minuto',
+                            secondText: 'Segundo',
+                            currentText: 'Agora',
+                            closeText: 'Pronto'
+                        });
                     })
                 </script>";
 

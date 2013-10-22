@@ -9,6 +9,7 @@ GLOBAL $CFG;
 <script type="text/javascript" src="<?= $CFG->affix . $CFG->lib ?>plugins/tinymce/jscripts/tiny_mce/jquery.tinymce.js"></script>
 <script type="text/javascript" src="<?= $CFG->affix . $CFG->lib ?>plugins/jquery/jpicker/jpicker-1.1.6.min.js"></script>
 <script type="text/javascript" src="<?= $CFG->affix . $CFG->lib ?>plugins/jquery/tokeninput/src/jquery.tokeninput.js"></script>
+<script type="text/javascript" src="<?= $CFG->affix . $CFG->lib ?>plugins/jquery/datetimepicker/dist/jquery-ui-timepicker-addon.min.js"></script>
 <script type="text/javascript" src="<?= $CFG->affix . $CFG->lib ?>js/core.js"></script>
 <script type="text/javascript" src="<?= $CFG->affix . $CFG->lib ?>js/utils.js"></script>
 <script type="text/javascript" src="<?= $CFG->affix . $CFG->lib ?>js/functions.js"></script>
@@ -21,6 +22,7 @@ GLOBAL $CFG;
 <link rel="stylesheet" type="text/css" href="<?= $CFG->affix . $CFG->lib ?>plugins/jquery/DataTables-1.9.4/media/css/demo_page.css" />
 <link rel="stylesheet" type="text/css" href="<?= $CFG->affix . $CFG->lib ?>plugins/jquery/DataTables-1.9.4/media/css/demo_table.css" />   	
 <link rel="stylesheet" type="text/css" href="<?= $CFG->affix . $CFG->lib ?>plugins/jquery/css/custom-theme/jquery-ui-1.10.3.custom.min.css" />
+<link rel="stylesheet" type="text/css" href="<?= $CFG->affix . $CFG->lib ?>plugins/jquery/datetimepicker/dist/jquery-ui-timepicker-addon.min.css" />
 <link rel="stylesheet" type="text/css" href="<?= $CFG->affix . $CFG->lib ?>plugins/bootstrap/css/bootstrap.min.css" />
 <link rel="stylesheet" type="text/css" href="<?= $CFG->affix . $CFG->lib ?>plugins/Font-Awesome/css/font-awesome-ie7.css" />
 <link rel="stylesheet" type="text/css" href="<?= $CFG->affix . $CFG->lib ?>plugins/Font-Awesome/css/font-awesome.css" />

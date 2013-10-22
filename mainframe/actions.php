@@ -197,6 +197,61 @@ if (isset($_POST['action'])) {
                 }
             } break;
 
+        case "_InsUpdtEventos" : {
+                if ($_POST['eventopai'] == 0) {
+                    unset($_POST['eventopai']);
+                }
+                if ($_POST['sala'] == 0) {
+                    unset($_POST['sala']);
+                }
+
+                $_POST['iniinscricao'] = $uti->formatDateTime($_POST['iniinscricao'], "americanoFull");
+                $_POST['fiminscricao'] = $uti->formatDateTime($_POST['fiminscricao'], "americanoFull");
+
+                $_POST['inievento'] = $uti->formatDateTime($_POST['inievento'], "americanoFull");
+                $_POST['fimevento'] = $uti->formatDateTime($_POST['fimevento'], "americanoFull");
+
+                if (isset($_FILES['logo']) && $_FILES['logo']['name'] != "") {
+                    try {
+                        $filename = uniqid($_FILES['logo']['name']) . $_FILES['logo']['name'];
+
+                        if ($_FILES['logo']['error'] != 0) {
+                            header("Location: $retorno?err=Houve_Erro_ao_enviar_a_imagem_o_processo_foi_interrompido_tente_novamente...");
+                            exit();
+                        } else if (!file_exists("../assets/data/") && !mkdir("../assets/data/", 0777, true)) {
+                            header("Location: $retorno?err=Houve_Erro_com_as_permissoes_o_processo_foi_interrompido_tente_novamente...");
+                            exit();
+                        } else if (!move_uploaded_file($_FILES['logo']['tmp_name'], "../assets/data/" . $filename)) {
+                            header("Location: $retorno?err=Houve_algum_problema_ao_salvar_a_imagem_o_processo_foi_interrompido_tente_novamente...");
+                            exit();
+                        }
+                        $_POST['logo'] = $filename;
+                    } catch (Exception $e) {
+                        header("Location: $retorno?err=$e");
+                        exit();
+                    }
+                }
+
+                if ($db->query("SELECT 0 FROM eventos WHERE id = {$_POST["id"]}")->RecordCount() == 0) {
+                    try {
+                        $db->_insrt("eventos", $_POST);
+                    } catch (exception $e) {
+                        header("Location: $retorno?err=$e");
+                        exit();
+                    }
+                } else {
+                    try {
+                        $db->_updt("eventos", $_POST, "id = {$_POST["id"]}");
+                    } catch (exception $e) {
+                        header("Location: $retorno?err=$e");
+                        exit();
+                    }
+
+                    header("Location: $retorno?mens=OK");
+                    exit();
+                }
+            } break;
+
         case "matriculaEvento" : {
                 $pessoa = explode(",", $_POST['pessoas']);
                 foreach ($pessoa as $p) {

@@ -47,7 +47,7 @@ class admEventos extends database {
         $uti = new utils();
         $sql = "SELECT * FROM tipos ORDER BY nome ASC";
 
-        $str = $uti->getSelectDb($id, "tipos", "id", "nome", "tipo", parent::query($sql));
+        $str = $uti->getSelectDb($id, "tipos", "id", "nome", "tipo", parent::query($sql), false);
 
         return $str;
     }
@@ -129,6 +129,15 @@ class admEventos extends database {
         }
         $json .= ']';
         echo $json;
+    }
+
+    function getRsAtividadesDoEvento($evento) {
+        $uti = new utils();
+        $rs = $uti->getArraySelectDB(parent::query("SELECT id FROM eventos WHERE eventopai = $evento"), 0);
+
+        return $uti->getMultiselect(array("cod" => $rs, "table" => 'eventos', "key" => "id", "data" =>
+                    array('nome'), "name" => 'atividadesdoevento', "searchclass" => "admEventos", "theme" => "",
+                    "utf8" => false, "min" => 1, "getJsonDB" => "eventos/getJSONEventos"));
     }
 
 }
