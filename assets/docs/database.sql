@@ -83,13 +83,15 @@ CREATE TABLE eventos (
     nome character varying(255) NOT NULL,
     resumo text,
     logo text,
-    inievento timestamp(6) without time zone DEFAULT now() NOT NULL,
-    fimevento timestamp(6) without time zone DEFAULT now() NOT NULL,
+    inievento timestamp(6) without time zone DEFAULT now(),
+    fimevento timestamp(6) without time zone DEFAULT now(),
     local character varying(255),
-    iniinscricao timestamp(6) without time zone DEFAULT now() NOT NULL,
-    fiminscricao timestamp(6) without time zone DEFAULT now() NOT NULL,
+    iniinscricao timestamp(6) without time zone DEFAULT now(),
+    fiminscricao timestamp(6) without time zone DEFAULT now(),
     sala integer,
-    status smallint DEFAULT 0 NOT NULL
+    status smallint DEFAULT 0 NOT NULL,
+    instituicao integer,
+    contato text
 );
 
 
@@ -107,6 +109,36 @@ CREATE TABLE inscricoes (
 
 
 ALTER TABLE public.inscricoes OWNER TO postgres;
+
+--
+-- Name: instituicoes_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE instituicoes_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.instituicoes_id_seq OWNER TO postgres;
+
+--
+-- Name: instituicoes; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE instituicoes (
+    id integer DEFAULT nextval('instituicoes_id_seq'::regclass) NOT NULL,
+    nome character varying NOT NULL,
+    sigla character varying,
+    email character varying,
+    telefone character varying,
+    status smallint DEFAULT 0 NOT NULL
+);
+
+
+ALTER TABLE public.instituicoes OWNER TO postgres;
 
 --
 -- Name: logs_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -295,35 +327,56 @@ INSERT INTO actlogs VALUES (6, 1, 'login', '_login', 'Login = adm', '2013-10-21 
 INSERT INTO actlogs VALUES (7, 1, 'login', '_login', 'Login = adm', '2013-10-21 08:48:32.066952');
 INSERT INTO actlogs VALUES (8, 1, 'login', '_login', 'Login = adm', '2013-10-21 10:02:51.323988');
 INSERT INTO actlogs VALUES (9, 1, 'login', '_login', 'Login = adm', '2013-10-21 15:35:04.277201');
+INSERT INTO actlogs VALUES (10, 1, 'login', '_login', 'Login = adm', '2013-10-21 19:34:21.159018');
+INSERT INTO actlogs VALUES (11, 1, 'login', '_login', 'Login = adm', '2013-10-22 15:38:18.875377');
+INSERT INTO actlogs VALUES (12, 1, 'login', '_login', 'Login = adm', '2013-10-22 19:34:04.115173');
+INSERT INTO actlogs VALUES (13, 1, 'login', '_login', 'Login = adm', '2013-10-22 19:34:48.649022');
+INSERT INTO actlogs VALUES (14, 1, 'login', '_login', 'Login = adm', '2013-10-22 21:27:21.870284');
+INSERT INTO actlogs VALUES (15, 1, 'login', '_login', 'Login = adm', '2013-10-24 19:16:42.661655');
 
 
 --
 -- Name: actlogs_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('actlogs_id_seq', 9, true);
+SELECT pg_catalog.setval('actlogs_id_seq', 15, true);
 
 
 --
 -- Data for Name: eventos; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO eventos VALUES (4, NULL, 4, 'Seminário Nacional de Testes', 'Este é um exemplo de testes', NULL, '2013-10-01 20:55:33', '2013-10-15 20:55:33', 'Osório', '2013-09-16 20:55:33', '2013-09-23 20:55:33', 8, 1);
+INSERT INTO eventos VALUES (4, 4, 4, 'Seminário Nacional de Testes', 'Este é um exemplo de testes', 'impressao_digital_digital.jpg5269a35ed0e50impressao_digital_digital.jpg', '2013-01-10 00:00:00', '2013-01-10 10:00:00', 'Osório', '2013-10-22 17:01:00', '2013-10-01 07:00:00', 8, 1, 1, 'asdas');
+INSERT INTO eventos VALUES (54, 4, 5, 'teste', '', NULL, '2013-01-10 00:00:00', '2013-01-10 10:00:00', '', '2013-01-10 00:00:00', '2013-01-10 00:00:00', NULL, 1, NULL, NULL);
 
 
 --
 -- Name: eventos_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('eventos_id_seq', 31, true);
+SELECT pg_catalog.setval('eventos_id_seq', 77, true);
 
 
 --
 -- Data for Name: inscricoes; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO inscricoes VALUES (1, 4, 8);
 INSERT INTO inscricoes VALUES (109, 4, 8);
+INSERT INTO inscricoes VALUES (1, 4, 8);
+
+
+--
+-- Data for Name: instituicoes; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO instituicoes VALUES (1, 'Instituição de Teste', 'ITE', 'ite@ite.com', 'asdasd', 1);
+
+
+--
+-- Name: instituicoes_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('instituicoes_id_seq', 24, true);
 
 
 --
@@ -336,7 +389,7 @@ INSERT INTO inscricoes VALUES (109, 4, 8);
 -- Name: logs_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('logs_id_seq', 8, true);
+SELECT pg_catalog.setval('logs_id_seq', 25, true);
 
 
 --
@@ -351,20 +404,21 @@ INSERT INTO pessoas VALUES (1, 'Administrador', 'adm@teste.com', '', 'adm', 'adm
 -- Name: pessoas_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('pessoas_id_seq', 136, true);
+SELECT pg_catalog.setval('pessoas_id_seq', 161, true);
 
 
 --
 -- Data for Name: presencas; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
+INSERT INTO presencas VALUES (8, 4, 1, 1, '2013-10-22 21:34:00.015536', 1);
 
 
 --
 -- Name: presencas_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('presencas_id_seq', 7, true);
+SELECT pg_catalog.setval('presencas_id_seq', 8, true);
 
 
 --
@@ -395,7 +449,7 @@ INSERT INTO salas VALUES (8, 'sala 1', 1, 3);
 -- Name: salas_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('salas_id_seq', 13, true);
+SELECT pg_catalog.setval('salas_id_seq', 19, true);
 
 
 --
@@ -413,7 +467,15 @@ INSERT INTO tipos VALUES (2, 'Palestra', 0);
 -- Name: tipos_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('tipos_id_seq', 35, true);
+SELECT pg_catalog.setval('tipos_id_seq', 40, true);
+
+
+--
+-- Name: instituicoes_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY instituicoes
+    ADD CONSTRAINT instituicoes_pkey PRIMARY KEY (id);
 
 
 --
@@ -454,6 +516,14 @@ ALTER TABLE ONLY eventos
 
 ALTER TABLE ONLY inscricoes
     ADD CONSTRAINT unq_inscrioes PRIMARY KEY (pessoa, evento, regra);
+
+
+--
+-- Name: unq_instit; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY instituicoes
+    ADD CONSTRAINT unq_instit UNIQUE (id, nome);
 
 
 --
@@ -516,6 +586,13 @@ CREATE INDEX idx_actlogs ON actlogs USING btree (id, pessoa, modulo, action);
 --
 
 CREATE INDEX idx_eventos ON eventos USING btree (id, eventopai);
+
+
+--
+-- Name: idx_instit; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE UNIQUE INDEX idx_instit ON instituicoes USING btree (id);
 
 
 --
@@ -621,6 +698,14 @@ ALTER TABLE ONLY inscricoes
 
 ALTER TABLE ONLY inscricoes
     ADD CONSTRAINT fk_inscricoes_regras_1 FOREIGN KEY (regra) REFERENCES regras(id);
+
+
+--
+-- Name: fk_instituicoes; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY eventos
+    ADD CONSTRAINT fk_instituicoes FOREIGN KEY (instituicao) REFERENCES instituicoes(id);
 
 
 --

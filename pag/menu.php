@@ -36,6 +36,26 @@ if (isset($_SESSION['usuid'])) {
     <ul id="menu-adm" style="margin-top: 20px">
         <li <?php if (strpos($_SERVER['REQUEST_URI'], 'cadastroalteracao/Cadastros_e_Alteracoes.php')) echo 'class="ui-state-focus"' ?>>
             <a href="<?= $CFG->www ?>pg/comuns/cadastroalteracao/Cadastros_e_Alteracoes.php">Cadastro / Alteração</a>
+            <ul style="z-index: 9999;">
+                <li <?php if (strpos($_SERVER['REQUEST_URI'], 'getPessoas/Cadastro_e_Alteracao_de_Usuarios.php')) echo 'class="ui-state-focus"' ?>>
+                    <a href='<?= $CFG->www ?>pg/pessoas/getPessoas/Cadastro_e_Alteracao_de_Usuarios.php'>Dados do Usuário</a>
+                </li>
+                <li <?php if (strpos($_SERVER['REQUEST_URI'], 'getPapeis/Cadastro_e_Alteracao_de_Papeis.php')) echo 'class="ui-state-focus"' ?>>
+                    <a href='<?= $CFG->www ?>pg/pessoas/getPapeis/Cadastro_e_Alteracao_de_Papeis.php'>Papéis</a>
+                </li>
+                <li <?php if (strpos($_SERVER['REQUEST_URI'], 'getEventos/Cadastro_e_Alteracao_de_Eventos.php')) echo 'class="ui-state-focus"' ?>>
+                    <a href='<?= $CFG->www ?>pg/eventos/getEventos/Cadastro_e_Alteracao_de_Eventos.php'>Eventos</a>
+                </li>
+                <li <?php if (strpos($_SERVER['REQUEST_URI'], 'getTipos/Cadastro_e_Alteracao_de_Tipos.php')) echo 'class="ui-state-focus"' ?>>
+                    <a href='<?= $CFG->www ?>pg/comuns/getTipos/Cadastro_e_Alteracao_de_Tipos.php'>Tipos</a>
+                </li>
+                <li <?php if (strpos($_SERVER['REQUEST_URI'], 'getSalas/Cadastro_e_Alteracao_de_Salas.php')) echo 'class="ui-state-focus"' ?>>
+                    <a href='<?= $CFG->www ?>pg/comuns/getSalas/Cadastro_e_Alteracao_de_Salas.php'>Salas</a>
+                </li>
+                <li <?php if (strpos($_SERVER['REQUEST_URI'], 'getSalas/Cadastro_e_Alteracao_de_Insituicoes.php')) echo 'class="ui-state-focus"' ?>>
+                    <a href='<?= $CFG->www ?>pg/comuns/getInstituicoes/Cadastro_e_Alteracao_de_Insituicoes.php'>Instituições</a>
+                </li>
+            </ul>
         </li>
         <li <?php if (strpos($_SERVER['REQUEST_URI'], 'vinculopessoaseventos/Pessoas_e_Eventos.php')) echo 'class="ui-state-focus"' ?>>
             <a href="<?= $CFG->www ?>pg/comuns/vinculopessoaseventos/Pessoas_e_Eventos.php">Pessoas / Eventos</a>

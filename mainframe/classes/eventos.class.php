@@ -11,6 +11,7 @@ class eventos extends admEventos {
      */
     function getEventos($table, $param) {
         GLOBAL $CFG;
+        $uti = new utils();
 
         if (isset($param->id)) {
             $rs = parent::getRsEventosId($param->id)->FetchObject();
@@ -77,30 +78,40 @@ class eventos extends admEventos {
                                     <label for='tipo'>Evento Pai</label>                                                                
                                     " . parent::getSelectEvento($rs->EVENTOPAI) . "
                                 </div>
+                                
+                                <div class='leftFloat' style='text-align: left;'> 
+                                    <label for='instituicao'>Instituição Org.</label>                                                                
+                                    " . parent::getSelectInstituicao($rs->INSTITUICAO) . "
+                                </div>
 
                                 <div class='rightFloat' style='width:100%; text-align: left;'>                                                        
                                     <label for='resumo'>Resumo</label>                                                                
                                     <textarea name='resumo' id='resumo'>$rs->RESUMO</textarea>
                                 </div>
+                                
+                                <div class='rightFloat' style='width:100%; text-align: left;'>                                                        
+                                    <label for='contato'>Contato</label>                                                                
+                                    <textarea name='contato' id='contato'>$rs->CONTATO</textarea>
+                                </div>
 
                                 <div class='leftFloat' style='text-align: left;'>                                                        
                                     <label for='iniinscricao'>Abertura de Inscrições</label>
-                                    <input type='text' name='iniinscricao' id='iniinscricao' value='$rs->INIINSCRICAO' class='span6' />
+                                    <input type='text' name='iniinscricao' id='iniinscricao' value='" . $uti->formatDateTime($rs->INIINSCRICAO) . "' class='span6' />
                                 </div>
                                 
                                 <div class='rightFloat' style='text-align: left;'>                                                        
                                     <label for='fiminscricao'>Fim de Inscrições</label>
-                                    <input type='text' name='fiminscricao' id='fiminscricao' value='$rs->FIMINSCRICAO' class='span6' />
+                                    <input type='text' name='fiminscricao' id='fiminscricao' value='" . $uti->formatDateTime($rs->FIMINSCRICAO) . "' class='span6' />
                                 </div>
                                 
                                 <div class='leftFloat' style='text-align: left;'>                                                        
                                     <label for='inievento'>Início do Evento</label>
-                                    <input type='text' name='inievento' id='inievento' value='$rs->INIEVENTO' class='span6' />
+                                    <input type='text' name='inievento' id='inievento' value='" . $uti->formatDateTime($rs->INIEVENTO) . "' class='span6' />
                                 </div>
                                 
                                 <div class='rightFloat' style='text-align: left;'>                                                        
                                     <label for='fimevento'>Fim do evento</label>
-                                    <input type='text' name='fimevento' id='fimevento' value='$rs->FIMEVENTO' class='span6' />
+                                    <input type='text' name='fimevento' id='fimevento' value='" . $uti->formatDateTime($rs->FIMEVENTO) . "' class='span6' />
                                 </div>
                                 
                                 <div class='leftFloat' style='text-align: left;'>                                                        
@@ -161,7 +172,15 @@ class eventos extends admEventos {
                             minuteText: 'Minuto',
                             secondText: 'Segundo',
                             currentText: 'Agora',
-                            closeText: 'Pronto'
+                            closeText: 'Pronto',
+                            
+                            dayNames: ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'],
+                            dayNamesMin: ['D','S','T','Q','Q','S','S','D'],
+                            dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb','Dom'],
+                            monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'],
+                            monthNamesShort: ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'],
+                            nextText: 'Próximo',
+                            prevText: 'Anterior'                            
                         });
                     })
                 </script>";

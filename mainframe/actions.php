@@ -198,18 +198,28 @@ if (isset($_POST['action'])) {
             } break;
 
         case "_InsUpdtEventos" : {
-                if ($_POST['eventopai'] == 0) {
+                if (isset($_POST['eventopai']) && $_POST['eventopai'] == 0) {
                     unset($_POST['eventopai']);
                 }
-                if ($_POST['sala'] == 0) {
+                if (isset($_POST['sala']) && $_POST['sala'] == 0) {
                     unset($_POST['sala']);
                 }
+                if (isset($_POST['instituicao']) && $_POST['instituicao'] == 0) {
+                    unset($_POST['instituicao']);
+                }
 
-                $_POST['iniinscricao'] = $uti->formatDateTime($_POST['iniinscricao'], "americanoFull");
-                $_POST['fiminscricao'] = $uti->formatDateTime($_POST['fiminscricao'], "americanoFull");
-
-                $_POST['inievento'] = $uti->formatDateTime($_POST['inievento'], "americanoFull");
-                $_POST['fimevento'] = $uti->formatDateTime($_POST['fimevento'], "americanoFull");
+                if (isset($_POST['iniinscricao'])) {
+                    $_POST['iniinscricao'] = $uti->formatDateTime($_POST['iniinscricao'], "americanoFull");
+                }
+                if (isset($_POST['iniinscricao'])) {
+                    $_POST['fiminscricao'] = $uti->formatDateTime($_POST['fiminscricao'], "americanoFull");
+                }
+                if (isset($_POST['iniinscricao'])) {
+                    $_POST['inievento'] = $uti->formatDateTime($_POST['inievento'], "americanoFull");
+                }
+                if (isset($_POST['iniinscricao'])) {
+                    $_POST['fimevento'] = $uti->formatDateTime($_POST['fimevento'], "americanoFull");
+                }
 
                 if (isset($_FILES['logo']) && $_FILES['logo']['name'] != "") {
                     try {
@@ -246,10 +256,25 @@ if (isset($_POST['action'])) {
                         header("Location: $retorno?err=$e");
                         exit();
                     }
-
-                    header("Location: $retorno?mens=OK");
-                    exit();
                 }
+
+                $atvds = $db->query("SELECT id FROM eventos WHERE eventopai = {$_POST["id"]}");
+                while ($o = $atvds->FetchNextObject()) {
+                    if (!$db->_updt("eventos", array("eventopai" => null), "id = $o->ID")) {
+                        header("Location: $retorno?err=Desvinculando_atividades");
+                        exit();
+                    }
+                }
+
+                if (isset($_POST['atividadesdoevento'])) {
+                    if (!$db->_updt("eventos", array("eventopai" => $_POST['id']), "id IN ({$_POST['atividadesdoevento']})")) {
+                        header("Location: $retorno?err=Vinculando_atividades");
+                        exit();
+                    }
+                }
+
+                header("Location: $retorno?mens=OK");
+                exit();
             } break;
 
         case "matriculaEvento" : {

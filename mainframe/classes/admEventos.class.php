@@ -19,6 +19,15 @@ class admEventos extends database {
         return parent::query($sql);
     }
 
+    function getRsAtividadesId($id) {
+        $sql = "SELECT e.*, t.nome as tnome, s.nome snome
+                    FROM eventos e 
+                INNER JOIN tipos t ON (e.tipo = t.id)
+           LEFT OUTER JOIN salas s ON (e.sala = e.id)
+                    WHERE eventopai = $id ORDER BY nome ASC";
+        return parent::query($sql);
+    }
+
     function getRsGradeId($id = "") {
         $sql = "SELECT * FROM eventos ";
 
@@ -39,6 +48,15 @@ class admEventos extends database {
         $sql = "SELECT * FROM eventos ORDER BY nome ASC";
 
         $str = $uti->getSelectDb($id, "eventos", "id", "nome", "evento", parent::query($sql), false, $extra);
+
+        return $str;
+    }
+
+    function getSelectInstituicao($id = "", $extra = "") {
+        $uti = new utils();
+        $sql = "SELECT * FROM instituicoes ORDER BY nome ASC";
+
+        $str = $uti->getSelectDb($id, "instituicoes", "id", "nome", "instituicao", parent::query($sql), false, $extra);
 
         return $str;
     }

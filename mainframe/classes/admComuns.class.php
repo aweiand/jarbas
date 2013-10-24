@@ -53,6 +53,36 @@ class admComuns extends database {
         echo $json;
     }
 
+    function getAutoCompleteInstituicoes($id = '') {
+        $uti = new utils();
+
+        return $uti->getMultiselect(array("cod" => $id, "table" => 'instituicoes', "key" => "id", "data" =>
+                    array('nome'), "name" => 'instituicao', "searchclass" => "admComuns", "theme" => "",
+                    "utf8" => false, "min" => 1, "getJsonDB" => "comuns/getJSONInstituicoes"));
+    }
+
+    function getJSONInstituicoes($table, $param) {
+        $rs = parent::query("SELECT * FROM instituicoes
+                                WHERE UPPER(nome) LIKE UPPER('%" . strtoupper($param->term) . "%') 
+                                   OR UPPER(sigla) LIKE UPPER('%" . strtoupper($param->term) . "%') 
+                            LIMIT 10 OFFSET 0");
+        $json = '[';
+        $first = true;
+        while (!$rs->EOF) {
+            if (!$first) {
+                $json .= ',';
+            } else {
+                $first = false;
+            }
+            $json .= '{"id": ' . $rs->Fields("id") . ' , "value":"' . $rs->Fields("nome") . '",
+                        "username" :"' . $rs->Fields("nome") . '", "email":"' . $rs->Fields("sigla") .
+                    '", "name":"' . $rs->Fields("nome") . '" }';
+            $rs->MoveNext();
+        }
+        $json .= ']';
+        echo $json;
+    }
+
     function getAutoCompleteTipos($id = '') {
         $uti = new utils();
 

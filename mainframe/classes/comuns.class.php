@@ -303,6 +303,103 @@ class comuns extends admComuns {
         return $str;
     }
 
+    function getInstituicoes($table, $param) {
+        GLOBAL $CFG;
+
+        if (isset($param->id)) {
+            $rs = parent::getRsTableId("instituicoes", $param->id)->FetchObject();
+            $btn = "Alterar";
+        } else {
+            $param->id = parent::getNextId("instituicoes");
+            $rs = parent::getRsTableId("instituicoes", $param->id)->FetchObject();
+            $btn = "Cadastrar";
+        }
+
+        if (isset($param->err))
+            $mens = $com->trataError($param->err);
+        elseif (isset($param->mens))
+            $mens = $com->trataMens($param->mens);
+        else
+            $mens = "";
+
+        $str = "   <fieldset>
+                        <legend>Cadastro / Alteração</legend>
+                        $mens
+                        <div class='fullCenter'>
+                            <div class='leftFloat'>
+                                <label>Pesquisar</label>
+                                " . parent::getAutoCompleteInstituicoes(null) . "
+                            </div>
+                            
+                            <div class='rightFloat'>
+                                <br />
+                                <button onclick='pesquisaInstituicao()' class='btn btn-info btn-large'><i class='icon-ok'></i></button>
+                            </div>
+                        </div>
+                        <hr class='fullCenter' />
+                        
+                        <form id='frm-Insert-Simple' action='$CFG->affix/$CFG->lib/actions.php' method='POST'>
+                            <div class='fullCenter'>
+                                <div class='leftFloat' style='width:100%; text-align: left;'> 
+                                    <label for='nome'>Nome</label>
+                                    <input type='text' name='nome' id='nome' value='$rs->NOME' placeholder='digite um valor...' />
+                                    <input type='hidden' name='id' id='id' value='$param->id'/>
+                                    <input type='hidden' name='field' id='field' value='id'/>
+                                    <input type='hidden' name='table' id='table' value='instituicoes'/>
+                                    <input type='hidden' name='action' id='action' value='_InsUpdt'/>
+                                    <br />
+                                    <span class='error alert alert-error' id='errNome' style='display: none;'>Campo Obrigatório!</span>
+                                </div>
+
+                                <div class='leftFloat' style='width:100%; text-align: left;'>
+                                    <label for='sigla'>Sigla</label>
+                                    <input type='text' name='sigla' id='sigla' value='$rs->SIGLA' placeholder='digite um valor...' />
+                                </div>
+                                
+                                <div class='leftFloat' style='width:100%; text-align: left;'>
+                                    <label for='email'>E-mail</label>
+                                    <input type='email' name='email' id='email' value='$rs->EMAIL' placeholder='digite um valor...' />
+                                </div>
+                                
+                                <div class='leftFloat' style='width:100%; text-align: left;'>
+                                    <label for='capacidade'>Telefone</label>
+                                    <input type='text' name='telefone' id='telefone' value='$rs->TELEFONE' placeholder='digite um valor...' />
+                                </div>
+                                
+                                <div class='leftFloat' style='width:100%; text-align: left;'>
+                                    <label for='status'>Status</label>
+                                    <select name='status' id='status' class='span2'>";
+
+        switch ($rs->STATUS) {
+            case 1 :
+                $str.="<option value='1' selected='selected'>Ativa</option>
+                       <option value='0'>Deletada</option >";
+                break;
+            case -1 :
+                $str.="<option value='1'>Ativa</option>
+                       <option value='0' selected='selected'>Deletada</option >";
+                break;
+            default:
+                $str.="<option value='1' selected='selected'>Ativa</option>
+                       <option value='0'>Deletada</option >";
+                break;
+        }
+
+        $str.="            </select>
+                                </div>
+
+                                <br />
+                                <div class='fullCenter'>
+                                    <button class='btn btn-primary'>$btn</button>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;
+                                    <button class='btn btn-danger'><i class='icon-warning-sign'></i> Excluir</button>
+                                </div>
+                            </div>
+                        </form>
+                 </fieldset>";
+        return $str;
+    }
+
     /**
      * Retorna um formulário para inserção, com valores padrão
      * @global GLOBAL $CFG
@@ -560,19 +657,22 @@ class comuns extends admComuns {
                             <a href='#tabs-1'>Início</a>
                         </li>
                         <li>
-                            <a href='$CFG->www/act/pessoas/getPessoas/pessoas.php'>Dados do Usuário</a>
+                            <a href='$CFG->www/act/pessoas/getPessoas/Cadastro_e_Alteracao_de_Usuarios.php'>Dados do Usuário</a>
                         </li>
                         <li>
-                            <a href='$CFG->www/act/pessoas/getPapeis/papeis.php'>Papéis</a>
+                            <a href='$CFG->www/act/pessoas/getPapeis/Cadastro_e_Alteracao_de_Papeis.php'>Papéis</a>
                         </li>
                         <li>
-                            <a href='$CFG->www/act/eventos/getEventos/eventos.php'>Eventos</a>
+                            <a href='$CFG->www/act/eventos/getEventos/Cadastro_e_Alteracao_de_Eventos.php'>Eventos</a>
                         </li>
                         <li>
-                            <a href='$CFG->www/act/comuns/getTipos/tipos.php'>Tipos</a>
+                            <a href='$CFG->www/act/comuns/getTipos/Cadastro_e_Alteracao_de_Tipos.php'>Tipos</a>
                         </li>
                         <li>
-                            <a href='$CFG->www/act/comuns/getSalas/salas.php'>Salas</a>
+                            <a href='$CFG->www/act/comuns/getSalas/Cadastro_e_Alteracao_de_Salas.php'>Salas</a>
+                        </li>
+                        <li>
+                            <a href='$CFG->www/act/comuns/getInstituicoes/Cadastro_e_Alteracao_de_Insituicoes.php'>Instituições</a>
                         </li>
                       </ul>
                       <div id='tabs-1'>
@@ -780,6 +880,10 @@ class comuns extends admComuns {
         $pes = new admPessoas();
         $evnt = new admEventos();
 
+        if (!isset($param->evento)) {
+            $param->evento = "";
+        }
+
         $str = "<fieldset>
                     <legend>Impressão de Materiais para o Evento</legend>
                           
@@ -787,10 +891,42 @@ class comuns extends admComuns {
                     
                         <div class='span12' style='text-align: right;'>
                             <label>Evento</label>
-                            " . $evnt->getSelectEvento() . "
-                        </div>
-                        
-                    </div>
+                            " . $evnt->getSelectEvento($param->evento, "onchange='recarregaPaginaEvnt()'") . "
+                        </div>";
+
+        if ($param->evento != "") {
+            $str.= "    <div class='fullCenter'>
+                            <div class='span4' style='margin: 20px 0 20px 0;'>
+                                <a class='btn btn-primary' target='_new' href='$CFG->www/act/impressoes/imprimirListasDePresenca/presenca.php?evento=$param->evento'>
+                                    <i class='icon-list'></i>
+                                    Listas de Presença
+                                </a>
+                            </div>
+
+                            <div class='span4' style='margin: 20px 0 20px 0;'>
+                                <a class='btn btn-info' target='_new' href='$CFG->www/act/impressoes/imprimirCrachas/cracha.php?evento=$param->evento'>
+                                    <i class='icon-bookmark'></i>
+                                    Crachás
+                                </a>
+                            </div>
+
+                            <div class='span4' style='margin: 20px 0 20px 0;'>
+                                <a class='btn' target='_new' href='$CFG->www/act/impressoes/imprimirIdentificacaoDaSala/sala.php?evento=$param->evento'>
+                                    <i class='icon-th-list'></i>
+                                    Identificação de Sala
+                                </a>
+                            </div>
+
+                            <div class='span4' style='margin: 20px 0 20px 0;'>
+                                <a class='btn btn-warning' target='_new' href='$CFG->www/act/impressoes/imprimirCertificado/certificado.php?evento=$param->evento'>
+                                    <i class='icon-th'></i>
+                                    Certificados em Massa
+                                </a>
+                            </div>
+                        </div>";
+        }
+
+        $str.="     </div>
                     
                 </fieldset>";
 
