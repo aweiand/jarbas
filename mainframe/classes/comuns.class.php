@@ -774,7 +774,7 @@ class comuns extends admComuns {
                     
                         <div class='span12' style='text-align: right; margin-bottom: 40px'>
                             <label>Evento</label>
-                            " . $evnt->getSelectEvento($param->evento, "class='span8' onchange='recarregaPaginaEvnt()'") . "
+                            " . $evnt->getSelectAtividades($param->evento, "class='span8' onchange='recarregaPaginaEvnt()'") . "
                         </div>
                     
                         <div class='span4'>
@@ -846,7 +846,7 @@ class comuns extends admComuns {
 
                             <div class='span11' style='text-align: right;'>
                                 <label>Evento</label>
-                                " . $evnt->getSelectEvento($param->evento, "class='span8' onchange='recarregaPaginaEvnt()'") . "
+                                " . $evnt->getSelectAtividades($param->evento, "class='span8' onchange='recarregaPaginaEvnt()'") . "
                             </div>
 
                             <div class='span11'>

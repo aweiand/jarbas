@@ -19,7 +19,7 @@ class impressoes extends database {
         $atividades = $evnt->getRsAtividadesId($param->evento);
 
         while ($o = $atividades->FetchNextObject()) {
-            $inscritos = $evnt->getRsPessoasEvento($param->evento);
+            $inscritos = $evnt->getRsPessoasEvento($o->ID);
             $num = 1;
 
             $str.=" <h1 style='text-align: center;'>Lista de Presença do Evento - $evento->NOME</h1>
@@ -83,23 +83,25 @@ class impressoes extends database {
         $evnt = new admEventos();
         $uti = new utils();
 
-        $evento = $evnt->getRsEventosId($param->evento)->FetchObject();
-        $inscritos = $evnt->getRsPessoasEvento($param->evento);
+        $eventos = implode(",", $uti->getArraySelectDB($evnt->getRsAtividadesId($param->evento), 0));
+        $inscritos = $evnt->query("SELECT DISTINCT(pessoa), p.*
+                                        FROM inscricoes i
+                                    INNER JOIN pessoas p ON (p.id = i.pessoa)
+                                        WHERE evento IN ($eventos)");
 
         while ($o = $inscritos->FetchNextObject()) {
+            $evento = $evnt->getRsEventosId($param->evento)->FetchObject();
 
             $str.=" <table style='margin: 0 auto; width: 75%; text-align: center;' border='1'>
                         <thead>
                             <tr>
                                 <th colspan='2'>
-                                    <h1 style='text-align: center;'>$o->NOMER - $evento->NOME</h1>
+                                    <h3>Identificação</h3>
+                                    <h2 style='text-align: center;'>$o->NOMER - $evento->NOME</h2>
                                 </th>
                             <tr>
                                 <th>
                                     Pessoa
-                                </th>
-                                <th>
-                                    Evento
                                 </th>
                             </tr>
                         </thead>
@@ -107,9 +109,6 @@ class impressoes extends database {
                             <tr>
                                 <td>
                                     $o->NOME
-                                </td>
-                                <td>
-                                    
                                 </td>
                             </tr>
                         </tbody>
@@ -157,17 +156,22 @@ class impressoes extends database {
         $evnt = new admEventos();
         $uti = new utils();
 
-        $evento = $evnt->getRsEventosId($param->evento)->FetchObject();
-        $inscritos = $evnt->getRsPessoasEvento($param->evento);
+        $evento = $evnt->getRsAtividadesId($param->evento);
 
-        while ($o = $inscritos->FetchNextObject()) {
+        while ($oeventos = $evento->FetchNextObject()) {
+            if (isset($param->pessoa)) {
+                $inscritos = $evnt->getRsPessoasEvento($oeventos->ID, $param->pessoa);
+            } else {
+                $inscritos = $evnt->getRsPessoasEvento($oeventos->ID);
+            }
 
-            $str.="     <h2 style='text-align: center;'>Certificado de Evento</h2>
+            while ($o = $inscritos->FetchNextObject()) {
+                $str.=" <h2 style='text-align: center;'>Certificado de Evento</h2>
                         <table style='margin: 0 auto; width: 100%; text-align: center;'>
                         <thead>
                             <tr>
                                 <th colspan='2'>
-                                    <h1 style='text-align: center;'>$o->NOMER - $evento->NOME</h1>
+                                    <h1 style='text-align: center;'>$o->NOMER - $oeventos->NOME</h1>
                                 </th>
                             <tr>
                                 <th>
@@ -185,6 +189,7 @@ class impressoes extends database {
                     </table>
                     
                     <pagebreak />";
+            }
         }
 
         $mpdf->WriteHTML($str);

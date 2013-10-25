@@ -140,3 +140,17 @@ function desvinculaPessoaEvento() {
         _load(0);
     });
 }
+
+function inscreverNoEvento(pessoa, evento) {
+    _load(1);
+    $.post(action, {
+        "action": "matriculaEvento",
+        "pessoas": pessoa,
+        "evento": evento,
+        "regra": 8
+    }, function(result) {
+        alert(result);
+        _load(1);
+        window.location.reload();
+    });
+}

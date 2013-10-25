@@ -117,7 +117,7 @@ class database {
      * @return Recordset - com dados da Consulta Realizada
      */
     function _updt($rs, $record, $cod) {
-        $this->db->debug = true;
+        //$this->db->debug = true;
         $ret = $this->db->AutoExecute($rs, $record, 'UPDATE', $cod) or $this->gravaLog('_updt', $this->db->ErrorMsg() . " ###COD### " . $cod . " ###TABLE### " . $rs);
         return $ret;
     }

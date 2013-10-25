@@ -348,12 +348,15 @@ class pessoas extends admPessoas {
         $str = "   <fieldset>
                         <legend>Emissão de Certificados</legend>
                         <div class='fullCenter'>
-                            <label>Selecione o Evento</label>
-                            " . $admE->getSelectEvento() . "
+                            <form action='$CFG->www/act/impressoes/imprimirCertificado/certificado.php' method='GET'>
+                                <label>Selecione o Evento</label>
+                                " . $admE->getSelectEvento() . "
 
-                            <div class='fullCenter'>
-                                <button class='btn btn-primary'>Gerar</button>
-                            </div>
+                                <div class='fullCenter'>
+                                    <input type='hidden' name='pessoa' id='pessoa' value='{$_SESSION['usuid']}' />
+                                    <button class='btn btn-primary'>Gerar</button>
+                                </div>
+                            </form>
                         </div>
                  </fieldset>";
         return $str;

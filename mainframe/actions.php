@@ -199,13 +199,13 @@ if (isset($_POST['action'])) {
 
         case "_InsUpdtEventos" : {
                 if (isset($_POST['eventopai']) && $_POST['eventopai'] == 0) {
-                    unset($_POST['eventopai']);
+                    $_POST['eventopai'] = null;
                 }
                 if (isset($_POST['sala']) && $_POST['sala'] == 0) {
-                    unset($_POST['sala']);
+                    $_POST['sala'] = null;
                 }
                 if (isset($_POST['instituicao']) && $_POST['instituicao'] == 0) {
-                    unset($_POST['instituicao']);
+                    $_POST['instituicao'] = null;
                 }
 
                 if (isset($_POST['iniinscricao'])) {
@@ -266,7 +266,7 @@ if (isset($_POST['action'])) {
                     }
                 }
 
-                if (isset($_POST['atividadesdoevento'])) {
+                if (isset($_POST['atividadesdoevento']) && $_POST['atividadesdoevento'] != "") {
                     if (!$db->_updt("eventos", array("eventopai" => $_POST['id']), "id IN ({$_POST['atividadesdoevento']})")) {
                         header("Location: $retorno?err=Vinculando_atividades");
                         exit();

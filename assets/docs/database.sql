@@ -318,65 +318,54 @@ ALTER TABLE public.tipos OWNER TO postgres;
 -- Data for Name: actlogs; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO actlogs VALUES (1, 1, 'login', '_login', 'Login = adm', '2013-10-16 20:02:01.32769');
-INSERT INTO actlogs VALUES (2, 1, 'login', '_login', 'Login = adm', '2013-10-16 20:05:38.789902');
-INSERT INTO actlogs VALUES (3, 1, 'login', '_login', 'Login = adm', '2013-10-16 21:12:25.121673');
-INSERT INTO actlogs VALUES (4, 1, 'login', '_login', 'Login = adm', '2013-10-16 21:45:24.796838');
-INSERT INTO actlogs VALUES (5, 1, 'login', '_login', 'Login = adm', '2013-10-19 20:09:53.169695');
-INSERT INTO actlogs VALUES (6, 1, 'login', '_login', 'Login = adm', '2013-10-21 08:43:14.737055');
-INSERT INTO actlogs VALUES (7, 1, 'login', '_login', 'Login = adm', '2013-10-21 08:48:32.066952');
-INSERT INTO actlogs VALUES (8, 1, 'login', '_login', 'Login = adm', '2013-10-21 10:02:51.323988');
-INSERT INTO actlogs VALUES (9, 1, 'login', '_login', 'Login = adm', '2013-10-21 15:35:04.277201');
-INSERT INTO actlogs VALUES (10, 1, 'login', '_login', 'Login = adm', '2013-10-21 19:34:21.159018');
-INSERT INTO actlogs VALUES (11, 1, 'login', '_login', 'Login = adm', '2013-10-22 15:38:18.875377');
-INSERT INTO actlogs VALUES (12, 1, 'login', '_login', 'Login = adm', '2013-10-22 19:34:04.115173');
-INSERT INTO actlogs VALUES (13, 1, 'login', '_login', 'Login = adm', '2013-10-22 19:34:48.649022');
-INSERT INTO actlogs VALUES (14, 1, 'login', '_login', 'Login = adm', '2013-10-22 21:27:21.870284');
-INSERT INTO actlogs VALUES (15, 1, 'login', '_login', 'Login = adm', '2013-10-24 19:16:42.661655');
 
 
 --
 -- Name: actlogs_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('actlogs_id_seq', 15, true);
+SELECT pg_catalog.setval('actlogs_id_seq', 18, true);
 
 
 --
 -- Data for Name: eventos; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO eventos VALUES (4, 4, 4, 'Seminário Nacional de Testes', 'Este é um exemplo de testes', 'impressao_digital_digital.jpg5269a35ed0e50impressao_digital_digital.jpg', '2013-01-10 00:00:00', '2013-01-10 10:00:00', 'Osório', '2013-10-22 17:01:00', '2013-10-01 07:00:00', 8, 1, 1, 'asdas');
-INSERT INTO eventos VALUES (54, 4, 5, 'teste', '', NULL, '2013-01-10 00:00:00', '2013-01-10 10:00:00', '', '2013-01-10 00:00:00', '2013-01-10 00:00:00', NULL, 1, NULL, NULL);
+INSERT INTO eventos VALUES (54, 4, 6, 'Desenvolvendo Apps para Android', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur consectetur mi in libero pulvinar molestie. Maecenas vehicula accumsan gravida. Mauris semper eleifend turpis, eget vulputate mauris venenatis malesuada. Maecenas ultricies arcu eget euismod mollis. Curabitur velit magna, pharetra id scelerisque et, mollis euismod nunc. Nunc lacus nisi, porttitor non justo a, interdum mattis lorem. Aliquam non elementum ante. Vivamus non mauris tincidunt, tincidunt mauris et, dictum nibh. Nunc eu laoreet nisi. Vestibulum id sagittis leo. Suspendisse eu dui gravida nunc malesuada gravida. Aliquam felis dolor, hendrerit eu nibh eu, varius auctor felis. Nulla euismod lorem et volutpat placerat.', NULL, '2013-01-22 19:00:00', '2013-01-22 22:00:00', '', '2013-10-14 00:00:00', '2013-10-21 00:00:00', 8, 1, 1, 'Augusto / Deividi');
+INSERT INTO eventos VALUES (81, 4, 42, 'Maratona de Programação', 'Mauris mollis sagittis massa id sodales. Ut accumsan mauris felis, sed tempor mi scelerisque id. Pellentesque imperdiet ullamcorper nibh nec ultrices. Donec quis risus convallis, commodo diam id, scelerisque tortor. Donec imperdiet elementum magna, iaculis pellentesque lorem. In quis eros at libero pellentesque porttitor sit amet eget lorem. Integer nibh risus, venenatis vel erat ut, ultricies facilisis massa. Proin ultricies tristique orci, quis vestibulum massa laoreet sed. Sed quis turpis pretium, tempus turpis eget, elementum nisl.', NULL, '2013-10-23 19:00:00', '2013-10-23 22:00:00', '', '2013-10-14 00:00:00', '2013-10-21 00:00:00', 20, 1, 1, '');
+INSERT INTO eventos VALUES (4, NULL, 41, 'Semana Acadêmica do Curso de Licenciatura em Informática', 'Lorem Ipsum Ã© simplesmente uma simulaÃ§Ã£o de texto da indÃºstria tipogrÃ¡fica e de impressos, e vem sendo utilizado desde o sÃ©culo XVI, quando um impressor desconhecido pegou uma bandeja de tipos e os embaralhou para fazer um livro de modelos de tipos. Lorem Ipsum sobreviveu nÃ£o sÃ³ a cinco sÃ©culos, como tambÃ©m ao salto para a editoraÃ§Ã£o eletrÃ´nica, permanecendo essencialmente inalterado. Se popularizou na dÃ©cada de 60, quando', 'impressao_digital_digital.jpg5269a35ed0e50impressao_digital_digital.jpg', '2013-01-22 00:00:00', '2013-01-24 00:00:00', 'Osório', '2013-10-14 00:00:00', '2013-10-21 00:00:00', NULL, 1, 1, 'Andrio');
+INSERT INTO eventos VALUES (82, 4, 45, 'Salchipão', 'Nulla pharetra erat eu leo pretium, eu adipiscing nisi luctus. Donec sodales eros condimentum enim mollis fermentum. Phasellus consequat elementum neque. Ut eleifend ligula id metus elementum varius. Cras sit amet magna tellus. Quisque iaculis velit et nisi euismod vestibulum. Vivamus eu ornare lacus. Duis non dapibus enim, vel viverra sem. Etiam ullamcorper est nec nulla bibendum, nec pulvinar eros semper. Ut gravida turpis vel magna rutrum porttitor. Donec fermentum diam a iaculis imperdiet.', NULL, '2013-10-24 20:00:00', '2013-10-24 23:00:00', '', '2013-10-14 00:00:00', '2013-10-21 00:00:00', 29, 1, 1, '');
 
 
 --
 -- Name: eventos_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('eventos_id_seq', 77, true);
+SELECT pg_catalog.setval('eventos_id_seq', 86, true);
 
 
 --
 -- Data for Name: inscricoes; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO inscricoes VALUES (109, 4, 8);
-INSERT INTO inscricoes VALUES (1, 4, 8);
+INSERT INTO inscricoes VALUES (1, 54, 8);
+INSERT INTO inscricoes VALUES (109, 81, 8);
+INSERT INTO inscricoes VALUES (1, 82, 8);
+INSERT INTO inscricoes VALUES (109, 82, 8);
 
 
 --
 -- Data for Name: instituicoes; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO instituicoes VALUES (1, 'Instituição de Teste', 'ITE', 'ite@ite.com', 'asdasd', 1);
+INSERT INTO instituicoes VALUES (1, 'Faculdade Cenecista de Osório', 'FACOS', 'facos@teste.com', '51.2161-0200', 1);
 
 
 --
 -- Name: instituicoes_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('instituicoes_id_seq', 24, true);
+SELECT pg_catalog.setval('instituicoes_id_seq', 25, true);
 
 
 --
@@ -389,7 +378,7 @@ SELECT pg_catalog.setval('instituicoes_id_seq', 24, true);
 -- Name: logs_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('logs_id_seq', 25, true);
+SELECT pg_catalog.setval('logs_id_seq', 28, true);
 
 
 --
@@ -404,14 +393,13 @@ INSERT INTO pessoas VALUES (1, 'Administrador', 'adm@teste.com', '', 'adm', 'adm
 -- Name: pessoas_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('pessoas_id_seq', 161, true);
+SELECT pg_catalog.setval('pessoas_id_seq', 165, true);
 
 
 --
 -- Data for Name: presencas; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO presencas VALUES (8, 4, 1, 1, '2013-10-22 21:34:00.015536', 1);
 
 
 --
@@ -428,7 +416,7 @@ SELECT pg_catalog.setval('presencas_id_seq', 8, true);
 INSERT INTO regras VALUES (8, 'Aluno', 'Papel de Aluno ', 1);
 INSERT INTO regras VALUES (9, 'Professor', 'Professor', 1);
 INSERT INTO regras VALUES (10, 'Gerente', 'Gerente', 1);
-INSERT INTO regras VALUES (126, 'teste', 'sadsaas', 1);
+INSERT INTO regras VALUES (126, 'Ouvinte', 'Ouvinte', 1);
 
 
 --
@@ -442,14 +430,24 @@ SELECT pg_catalog.setval('regras_id_seq', 10, true);
 -- Data for Name: salas; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO salas VALUES (8, 'sala 1', 1, 3);
+INSERT INTO salas VALUES (20, 'Laboratório 2', 0, 20);
+INSERT INTO salas VALUES (21, 'Laboratório 3', 0, 20);
+INSERT INTO salas VALUES (22, 'Laboratório 4', 0, 20);
+INSERT INTO salas VALUES (23, 'Laboratório 5', 0, 20);
+INSERT INTO salas VALUES (24, 'Laboratório 6', 0, 20);
+INSERT INTO salas VALUES (25, 'Laboratório 7', 0, 20);
+INSERT INTO salas VALUES (26, 'Laboratório 8', 0, 20);
+INSERT INTO salas VALUES (8, 'Laboratório 1', 0, 20);
+INSERT INTO salas VALUES (27, 'Sala Multiuso', 0, 100);
+INSERT INTO salas VALUES (28, 'Auditório', 0, 200);
+INSERT INTO salas VALUES (29, 'Salão de Festas', 0, 300);
 
 
 --
 -- Name: salas_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('salas_id_seq', 19, true);
+SELECT pg_catalog.setval('salas_id_seq', 32, true);
 
 
 --
@@ -461,13 +459,17 @@ INSERT INTO tipos VALUES (3, 'Workshop', 0);
 INSERT INTO tipos VALUES (4, 'Seminário', 0);
 INSERT INTO tipos VALUES (5, 'Encontro', 0);
 INSERT INTO tipos VALUES (2, 'Palestra', 0);
+INSERT INTO tipos VALUES (41, 'Semana', 0);
+INSERT INTO tipos VALUES (42, 'Hand''s On', 0);
+INSERT INTO tipos VALUES (43, 'Hackaton', 0);
+INSERT INTO tipos VALUES (45, 'Confraternização', 0);
 
 
 --
 -- Name: tipos_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('tipos_id_seq', 40, true);
+SELECT pg_catalog.setval('tipos_id_seq', 47, true);
 
 
 --

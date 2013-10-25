@@ -193,79 +193,117 @@ class eventos extends admEventos {
 
         $str = "<fieldset>
                     <legend>Eventos Correntes</legend>
-                    <table class='table'>
-                        <thead>
-                            <tr>
-                                <th>
-                                    #
-                                </th>
-                                <th>
-                                    Evento
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>";
+                    <div id='accordion'>";
 
         $rs = parent::getRsEventosId();
         while ($o = $rs->FetchNextObject()) {
-            $str.= "<tr>
-                        <td>
-                            $o->ID
-                        </td>
-                        <td>
-                            $o->NOME
-                        </td>
-                    </tr>";
+            $atvd = parent::getRsAtividadesId($o->ID);
+
+            $str.= "<h3>$o->NOME</h3>
+                    <div>
+                        <p>
+                            $o->RESUMO
+                        </p>
+                        <a class='btn btn-primary' href='$CFG->www/pg/eventos/gradedehorarios/Grade_de_Horarios.php?evento=$o->ID'>Grade de Horários</a>
+                    <div class='accs'>";
+
+            while ($at = $atvd->FetchNextObject()) {
+                $str.= "<h3>$at->NOME</h3>
+                        <div>
+                            <p>
+                                $at->RESUMO
+                            </p>
+                        </div>";
+            }
+
+            $str.= "</div>
+                </div>";
         }
 
 
-        $str.="     </tbody>
-                </table>
-            </fieldset>";
+        $str.="     </div>
+            </fieldset>
+            
+            <script>
+                $(function(){
+                    $('#accordion, .accs').accordion({
+                        collapsible: true,
+                        active: false
+                    });
+                })
+            </script>";
 
         return $str;
     }
 
     function gradedehorarios($table, $param) {
         GLOBAL $CFG;
+        $uti = new utils();
         @session_start();
 
         if (!isset($param->evento)) {
-            $rs = parent::getRsGradeId();
+            $str = "<fieldset>
+                        <legend>Grade de Horário de Eventos</legend>
+                        " . parent::getSelectEvento(null, "class='span8' onchange='recarregaPaginaEvnt()'") . "
+                    </fieldset>";
         } else {
             $rs = parent::getRsGradeId($param->evento);
+            $str = "<fieldset>
+                        <legend>Grade de Horário do Evento - " . $rs->Fields("nome") . "</legend>
+                        " . parent::getSelectEvento($param->evento, "class='span8' onchange='recarregaPaginaEvnt()'") . "
+                        <table class='table'>
+                            <thead>
+                                <tr>
+                                    <th>
+                                        #
+                                    </th>
+                                    <th>
+                                        Evento
+                                    </th>
+                                    <th>
+                                        Início
+                                    </th>
+                                    <th>
+                                        Término
+                                    </th>
+                                    <th>
+                                        &nbsp;
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>";
+
+            while ($o = $rs->FetchNextObject()) {
+                if (isset($_SESSION['usuid'])) {
+                    $insc = parent::getBotaoInscricao($o->ID);
+                } else {
+                    $insc = "<a href='{$CFG->www}home.php' class='label label-warning' style='color: white'>Inscreva-se!</span>";
+                }
+
+                $str.= "    <tr>
+                                <td>
+                                    $o->ID
+                                </td>
+                                <td>
+                                    $o->NOME
+                                </td>
+                                <td>
+                                    " . $uti->formatDateTime($o->INIEVENTO) . "
+                                </td>
+                                <td>
+                                    " . $uti->formatDateTime($o->FIMEVENTO) . "
+                                </td>
+                                <td>
+                                    $insc
+                                </td>
+                            </tr>";
+            }
+
+
+            $str.="     </tbody>
+                    </table>
+                </fieldset>";
         }
-
-        $str = "<fieldset>
-                    <legend>Grade de Horário do Evento - EVENTO XXXXXX</legend>
-                    <table class='table'>
-                        <thead>
-                            <tr>
-                                <th>
-                                    #
-                                </th>
-                                <th>
-                                    Evento
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>";
-
-        while ($o = $rs->FetchNextObject()) {
-            $str.= "<tr>
-                        <td>
-                            $o->ID
-                        </td>
-                        <td>
-                            $o->NOME
-                        </td>
-                    </tr>";
-        }
-
-
-        $str.="     </tbody>
-                </table>
-            </fieldset>";
 
         return $str;
     }

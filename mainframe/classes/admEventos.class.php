@@ -9,33 +9,33 @@
 class admEventos extends database {
 
     function getRsEventosId($id = "") {
-        $sql = "SELECT * FROM eventos ";
-
-        if ($id != "") {
-            $sql.= "WHERE id = $id";
+        if ($id == "") {
+            $id = " eventopai IS NULL ";
+        } else {
+            $id = " id = $id ";
         }
 
-        $sql.= "ORDER BY nome ASC";
+        $sql = "SELECT * FROM eventos WHERE $id ORDER BY nome ASC";
         return parent::query($sql);
     }
 
-    function getRsAtividadesId($id) {
+    function getRsAtividadesId($id = "") {
+        if ($id == "") {
+            $id = " IS NOT NULL ";
+        } else {
+            $id = " = $id ";
+        }
+
         $sql = "SELECT e.*, t.nome as tnome, s.nome snome
                     FROM eventos e 
                 INNER JOIN tipos t ON (e.tipo = t.id)
-           LEFT OUTER JOIN salas s ON (e.sala = e.id)
-                    WHERE eventopai = $id ORDER BY nome ASC";
+           LEFT OUTER JOIN salas s ON (e.sala = s.id)
+                    WHERE eventopai $id ORDER BY nome ASC";
         return parent::query($sql);
     }
 
     function getRsGradeId($id = "") {
-        $sql = "SELECT * FROM eventos ";
-
-        if ($id != "") {
-            $sql.= "WHERE id = $id";
-        }
-
-        $sql.= "ORDER BY nome ASC";
+        $sql = "SELECT * FROM eventos WHERE eventopai = $id ORDER BY nome ASC";
         return parent::query($sql);
     }
 
@@ -45,7 +45,16 @@ class admEventos extends database {
 
     function getSelectEvento($id = "", $extra = "") {
         $uti = new utils();
-        $sql = "SELECT * FROM eventos ORDER BY nome ASC";
+        $sql = "SELECT * FROM eventos WHERE eventopai IS NULL ORDER BY nome ASC";
+
+        $str = $uti->getSelectDb($id, "eventos", "id", "nome", "evento", parent::query($sql), false, $extra);
+
+        return $str;
+    }
+
+    function getSelectAtividades($id = "", $extra = "") {
+        $uti = new utils();
+        $sql = "SELECT * FROM eventos WHERE eventopai IS NOT NULL ORDER BY nome ASC";
 
         $str = $uti->getSelectDb($id, "eventos", "id", "nome", "evento", parent::query($sql), false, $extra);
 
@@ -74,16 +83,32 @@ class admEventos extends database {
         $uti = new utils();
         $sql = "SELECT * FROM salas ORDER BY nome ASC";
 
-        $str = $uti->getSelectDb($id, "salas", "id", "nome", "sala", parent::query($sql));
+        $str = $uti->getSelectDb($id, "salas", "id", "nome", "sala", parent::query($sql), false);
 
         return $str;
     }
 
-    function getRsPessoasEvento($evento) {
+    function getBotaoInscricao($evnt) {
+        if (parent::query("SELECT pessoa FROM inscricoes WHERE pessoa = {$_SESSION['usuid']} AND evento = $evnt")->RecordCount() == 0) {
+            $str = "<button class='btn btn-primary' onclick='inscreverNoEvento({$_SESSION['usuid']}, $evnt)'>Inscrever-me</button>";
+        } else {
+            $str = "<span class='label label-success'>Já Inscrito</span>";
+        }
+
+        return $str;
+    }
+
+    function getRsPessoasEvento($evento, $pessoa = "") {
+        if ($pessoa != "") {
+            $pessoa = " AND p.id = $pessoa ";
+        } else {
+            $pessoa = " ";
+        }
+
         $sql = "SELECT p.*, r.nome as nomer FROM inscricoes i
                     INNER JOIN pessoas p ON (i.pessoa = p.id)
                     INNER JOIN regras r ON (i.regra = r.id)
-                WHERE i.evento = $evento
+                WHERE i.evento = $evento $pessoa
                     ORDER BY nome ASC";
 
         return parent::query($sql);
