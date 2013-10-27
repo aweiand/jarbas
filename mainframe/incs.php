@@ -10,6 +10,7 @@ GLOBAL $CFG;
 <script type="text/javascript" src="<?= $CFG->affix . $CFG->lib ?>plugins/jquery/jpicker/jpicker-1.1.6.min.js"></script>
 <script type="text/javascript" src="<?= $CFG->affix . $CFG->lib ?>plugins/jquery/tokeninput/src/jquery.tokeninput.js"></script>
 <script type="text/javascript" src="<?= $CFG->affix . $CFG->lib ?>plugins/jquery/datetimepicker/dist/jquery-ui-timepicker-addon.min.js"></script>
+<script type="text/javascript" src="<?= $CFG->affix . $CFG->lib ?>plugins/offline/offline.min.js"></script>
 <script type="text/javascript" src="<?= $CFG->affix . $CFG->lib ?>js/core.js"></script>
 <script type="text/javascript" src="<?= $CFG->affix . $CFG->lib ?>js/utils.js"></script>
 <script type="text/javascript" src="<?= $CFG->affix . $CFG->lib ?>js/functions.js"></script>
@@ -26,5 +27,6 @@ GLOBAL $CFG;
 <link rel="stylesheet" type="text/css" href="<?= $CFG->affix . $CFG->lib ?>plugins/bootstrap/css/bootstrap.min.css" />
 <link rel="stylesheet" type="text/css" href="<?= $CFG->affix . $CFG->lib ?>plugins/Font-Awesome/css/font-awesome-ie7.css" />
 <link rel="stylesheet" type="text/css" href="<?= $CFG->affix . $CFG->lib ?>plugins/Font-Awesome/css/font-awesome.css" />
+<link rel="stylesheet" type="text/css" href="<?= $CFG->affix . $CFG->lib ?>plugins/offline/themes/offline-theme-default.css" />
 <link rel="stylesheet" type="text/css" href="<?= $CFG->affix . $CFG->lib ?>css/core.css" />
 <link rel="stylesheet" type="text/css" href="<?= $CFG->affix . $CFG->lib ?>css/comuns.css" />
