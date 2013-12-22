@@ -183,4 +183,19 @@ class admEventos extends database {
                     "utf8" => false, "min" => 1, "getJsonDB" => "eventos/getJSONEventos"));
     }
 
+    function getEventosPessoa($pessoa = null){
+        if ($pessoa == null){
+            @session_start();
+            $pessoa = $_SESSION['usuid'];
+        }
+
+        $sql = "SELECT e.*, r.nome as rnome FROM eventos e
+                    INNER JOIN inscricoes i ON (e.id = i.evento)
+                    INNER JOIN regras r ON (i.regra = r.id)
+                WHERE pessoa = $pessoa
+                    ORDER BY nome ASC";
+
+        return parent::query($sql);
+    }
+
 }

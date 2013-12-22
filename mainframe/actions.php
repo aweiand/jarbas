@@ -71,6 +71,7 @@ if (isset($_GET['action'])) {
         case "logoff" : {
                 session_destroy();
                 header("Location: ../index.php?action=logOff");
+                exit();
             } break;
 
         case "upAnexo" : {
@@ -78,6 +79,19 @@ if (isset($_GET['action'])) {
                 $upload_handler = new UploadHandler(array("upload_dir" => "../assets/docs/anexos/", "upload_url" => "assets/docs/anexos/"));
                 exit();
             } break;
+
+        case "cancelainscricao" : {
+                if (isset($_SESSION['usuid']) && $_GET['pessoa'] == $_SESSION['usuid']){
+                    $admP = new admPessoas();
+
+                    if ($admP->cancelaInscricaoPessoaEvento($_GET['pessoa'], $_GET['evento'])){
+                        header("Location: $retorno?mens=OK");
+                    } else {
+                        header("Location: $retorno?err=Error");    
+                    }
+                }
+            } break;
+
     }
 }
 
@@ -194,6 +208,7 @@ if (isset($_POST['action'])) {
                     }
 
                     header("Location: $retorno?mens=OK");
+                    exit();
                 }
             } break;
 

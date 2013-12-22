@@ -7,7 +7,7 @@ function pesquisaPessoa() {
         }
         window.location = url + "?id=" + $("#pessoa").val();
     } else {
-        $("#ui-tabs-1").load(_dir() + "jarbas/act/pessoas/getPessoas/pessoas.php?id=" + $("#pessoa").val(), {}, function() {
+        $("#ui-tabs-1").load(_dir()+ "act/pessoas/getPessoas/pessoas.php?id=" + $("#pessoa").val(), {}, function() {
             _load(0);
         });
     }
@@ -22,7 +22,7 @@ function pesquisaRegra() {
         }
         window.location = url + "?id=" + $("#regra").val();
     } else {
-        $("#ui-tabs-2").load(_dir() + "jarbas/act/pessoas/getPapeis/papeis.php?id=" + $("#regra").val(), {}, function() {
+        $("#ui-tabs-2").load(_dir()+ "act/pessoas/getPapeis/papeis.php?id=" + $("#regra").val(), {}, function() {
             _load(0);
         });
     }
@@ -37,7 +37,7 @@ function pesquisaEventos() {
         }
         window.location = url + "?id=" + $("#evento").val();
     } else {
-        $("#ui-tabs-3").load(_dir() + "jarbas/act/eventos/getEventos/eventos.php?id=" + $("#evento").val(), {}, function() {
+        $("#ui-tabs-3").load(_dir()+ "act/eventos/getEventos/eventos.php?id=" + $("#evento").val(), {}, function() {
             _load(0);
         });
     }
@@ -52,7 +52,7 @@ function pesquisaTipo() {
         }
         window.location = url + "?id=" + $("#tipo").val();
     } else {
-        $("#ui-tabs-4").load(_dir() + "jarbas/act/comuns/getTipos/tipos.php?id=" + $("#tipo").val(), {}, function() {
+        $("#ui-tabs-4").load(_dir()+ "act/comuns/getTipos/tipos.php?id=" + $("#tipo").val(), {}, function() {
             _load(0);
         });
     }
@@ -67,7 +67,7 @@ function pesquisaSala() {
         }
         window.location = url + "?id=" + $("#sala").val();
     } else {
-        $("#ui-tabs-5").load(_dir() + "jarbas/act/comuns/getSalas/salas.php?id=" + $("#sala").val(), {}, function() {
+        $("#ui-tabs-5").load(_dir()+ "act/comuns/getSalas/salas.php?id=" + $("#sala").val(), {}, function() {
             _load(0);
         });
     }
@@ -82,7 +82,7 @@ function pesquisaInstituicao() {
         }
         window.location = url + "?id=" + $("#instituicao").val();
     } else {
-        $("#ui-tabs-6").load(_dir() + "jarbas/act/comuns/getInstituicoes/Cadastro_e_Alteracao_de_Insituicoes.php?id=" + $("#instituicao").val(), {}, function() {
+        $("#ui-tabs-6").load(_dir()+ "act/comuns/getInstituicoes/Cadastro_e_Alteracao_de_Insituicoes.php?id=" + $("#instituicao").val(), {}, function() {
             _load(0);
         });
     }
@@ -153,4 +153,39 @@ function inscreverNoEvento(pessoa, evento) {
         _load(1);
         window.location.reload();
     });
+}
+
+function validaCampos(form){
+    if (!validaCPF(form.cpf)){
+        return false;
+    }
+
+    // Valida o campo E-mail do Form, caso esteja com problemas, pinta de vermelho o background
+    if (form.email.value == '') {
+        alert("O campo EMAIL é obrigatório.");
+        form.email.style.backgroundColor = "red";
+        form.email.focus();
+        return false;
+    } else if (!(/^[\w\.-_\+]+@[\w-]+(\.\w{2,3})+$/).test(form.email.value)) {
+        alert("Insira um email válido.");
+        form.email.style.backgroundColor = "red";
+        form.email.focus();
+        return false;
+    } else {
+        form.email.style.backgroundColor = "white";
+    }
+
+    if (!validaCampoText(form.nome, "Nome")){
+        return false;
+    }
+
+    if (!validaCampoText(form.login, "Login")){
+        return false;
+    }
+
+    if (!validaCampoText(form.senha, "Senha")){
+        return false;
+    }
+
+   return true;
 }

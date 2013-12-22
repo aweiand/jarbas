@@ -44,7 +44,7 @@ class pessoas extends admPessoas {
                         </div>
                         <hr class='fullCenter' />
                         
-                        <form action='$CFG->affix/$CFG->lib/actions.php' method='POST'>
+                        <form action='$CFG->affix/$CFG->lib/actions.php' method='POST' onsubmit=\"if (!validaCampos(this)) return false; else return true;\">
                             <div class='fullCenter'>
                                 $mens
                                 <div class='leftFloat' style='width:100%; text-align: left;'> 
@@ -65,7 +65,7 @@ class pessoas extends admPessoas {
 
                                 <div class='leftFloat' style='text-align: left;'>
                                     <label for='cpf'>CPF</label>
-                                    <input type='text' name='cpf' id='cpf' value='$rs->CPF' placeholder='xxx.xxx.xxx-xx' maxlenght='15' class='span4' />
+                                    <input type='text' name='cpf' id='cpf' value='$rs->CPF' placeholder='xxxxxxxxxxx' maxlenght='11' class='span4' />
                                 </div>
 
                                 <div class='rightFloat' style='text-align: left;'>                                                        
@@ -177,11 +177,22 @@ class pessoas extends admPessoas {
     function autocadastro($table, $param) {
         GLOBAL $CFG;
         $evnt = new admEventos();
+        $com = new comuns();
+
+        if (isset($param->err))
+            $mens = $com->trataError($param->err);
+        elseif (isset($param->mens))
+            $mens = $com->trataMens($param->mens);
+        else
+            $mens = "";
 
         $str = "<fieldset>
                     <legend>Cadastro de Usuários</legend>
-                    
-                    <form action='$CFG->affix/$CFG->lib/actions.php' method='POST'>
+                    $mens
+                    <form action='{$CFG->affix}{$CFG->lib}actions.php' method='POST' onsubmit=\"if (!validaCampos(this)) return false; else return true;\">
+                        <input type='hidden' name='action' value='_insrtDataReturn' />
+                        <input type='hidden' name='table' value='pessoas' />
+
                         <table class='table'>
                             <tr>
                                 <td>
@@ -189,17 +200,6 @@ class pessoas extends admPessoas {
                                 </td>
                                 <td>
                                     <input type='text' name='nome' id='nome' />
-                                </td>
-                                <td rowspan='4'>
-                                    <label>Eventos</label>
-                                    <select name='evento' id='evento' multiple>";
-
-        $rs = $evnt->getRsEventosId();
-        while ($o = $rs->FetchNextObject()) {
-            $str.= "                    <option value='$o->ID'>$o->NOME</option >";
-        }
-
-        $str.="                     </select>
                                 </td>
                             </tr>
                             <tr>
@@ -215,7 +215,7 @@ class pessoas extends admPessoas {
                                     <label>CPF</label>
                                 </td>
                                 <td>
-                                    <input type='text' name='cpf' id='cpf' />
+                                    <input type='text' name='cpf' id='cpf' maxlength='11' />
                                 </td>
                             </tr>
                             <tr>
@@ -328,7 +328,7 @@ class pessoas extends admPessoas {
                         </div>
                         
                         <div id='meuseventos'>
-                            TODO: Listar os eventos que estou inscrito e talvez um botão com link para imprimir certificado
+                            ".$this->getMeusEventos($table, $param)."
                         </div>
                     
                     </div>
@@ -341,9 +341,68 @@ class pessoas extends admPessoas {
         return $str;
     }
 
+    function getMeusEventos($table, $param){
+        GLOBAL $CFG;
+        $admE = new admEventos();
+
+        $str = "<table class='table'>
+                    <thead>
+                        <tr>
+                            <th>
+                                Evento
+                            </th>
+                            <th>
+                                Inscrição
+                            </th>
+                            <th>
+                                Ações
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>";
+
+        $rs = $admE->getEventosPessoa();
+        while($o = $rs->FetchNextObject()){
+            $str.= "<tr>
+                        <td>
+                            $o->NOME
+                        </td>
+                        <td>
+                            $o->RNOME
+                        </td>";
+
+            if ((@date("Y-m-d H:m") > $o->INIINSCRICAO ) && (@date("Y-m-d H:m") > $o->FIMINSCRICAO)){
+                $str.=" <td>
+                            <a class='btn btn-info' href='{$CFG->affix}pg/pessoas/emissaodecertificado/Emissao_de_Certificado.php'>Imprimir Certificado</a>
+                        </td>";
+            } else {
+                $str.=" <td>
+                            <a class='btn btn-danger' href='{$CFG->affix}mainframe/actions.php?action=cancelainscricao&pessoa={$_SESSION['usuid']}&evento=$o->ID'>Cancelar Inscrição</a>
+                        </td>";
+            }
+
+            $str.=" </tr>";
+        }
+
+        $str.= "    </tbody>
+                </table>";
+
+        return $str;
+    }
+
     function emissaodecertificado($table, $param) {
         GLOBAL $CFG;
         $admE = new admEventos();
+
+        if (!isset($_SESSION['usuid'])){
+            $str = "<fieldset>
+                        <legend>Emissão de Certificados</legend>
+                        <div class='fullCenter'>
+                            <p>Olá! Por favor, faça seu <a style='font-weight: bold;' href='{$CFG->www}home.php'><u>login</u></a> para emitir um certificado....</p>
+                        </div>
+                 </fieldset>";
+                 return $str;
+        }
 
         $str = "   <fieldset>
                         <legend>Emissão de Certificados</legend>

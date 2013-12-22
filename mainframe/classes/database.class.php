@@ -183,6 +183,7 @@ class database {
 
     function setDebug($value) {
         $this->debug = $value;
+        $this->db->debug = $value;
     }
 
 }

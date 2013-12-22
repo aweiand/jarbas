@@ -9,7 +9,7 @@ function _dir() {
         var urlExplode = url.split("/");
         var serverName = urlExplode[0];
 
-        serverName = 'http://' + serverName + '/';
+        serverName = 'http://' + serverName + _CFGaffix;
         return serverName;
 }
 
@@ -17,9 +17,9 @@ function _dir() {
  * Variáveis que definem o endereço de processamento das requisições e da imagem de carregando
  * @type String
  */
-var acts = _dir() + "jarbas/act/";
-var action = _dir() + "jarbas/mainframe/actions.php";
-var loader = _dir() + "jarbas/assets/imgs/loader.gif";
+var acts = _dir() + "act/";
+var action = _dir() + "mainframe/actions.php";
+var loader = _dir() + "assets/imgs/loader.gif";
 
 /**
  * Revivendo uma função deprecated do jQuery
@@ -241,4 +241,30 @@ function verificaEmail(sEmail) {
         } else {
                 return true;
         }
+}
+
+function validaCPF(cpf){
+        // Valida o campo CPF do Form, caso esteja com problemas, pinta de vermelho o background
+        if ((cpf.value.length != 11) || (isNaN(cpf.value))) {
+            alert("O campo CPF deve conter 11 números e apenas números!");
+            cpf.style.backgroundColor = "red";
+            cpf.focus();
+            return false;
+        } else {
+            cpf.style.backgroundColor = "white";
+            return true;
+        }
+}
+
+function validaCampoText(campo, nome){
+    // Valida o campo do Form, caso esteja com problemas, pinta de vermelho o background
+    if (campo.value == '') {
+        alert("O campo "+nome+" é obrigatório.");
+        campo.style.backgroundColor = "red";
+        campo.focus();
+        return false;
+    } else {
+        campo.style.backgroundColor = "white";
+        return true;
+    }    
 }

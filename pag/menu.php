@@ -17,21 +17,13 @@ GLOBAL $CFG;
     <li <?php if (strpos($_SERVER['REQUEST_URI'], 'gradedehorarios/Grade_de_Horarios.php')) echo 'class="ui-state-focus"' ?>>
         <a href="<?= $CFG->www ?>pg/eventos/gradedehorarios/Grade_de_Horarios.php">Grade de Horários</a>
     </li>                        
-    <?php
-    if (isset($_SESSION['usuid'])) {
-        ?>
-        <li <?php if (strpos($_SERVER['REQUEST_URI'], 'emissaodecertificado/Emissao_de_Certificado.php')) echo 'class="ui-state-focus"' ?>>
-            <a href="<?= $CFG->www ?>pg/pessoas/emissaodecertificado/Emissao_de_Certificado.php">Emissão de Certificados</a>
-        </li> 
-    <?php } else { ?>
-        <li <?php if (strpos($_SERVER['REQUEST_URI'], 'home.php')) echo 'class="ui-state-focus"' ?>>
-            <a href="<?= $CFG->www ?>home.php">Emissão de Certificados</a>
-        </li> 
-    <?php } ?>
+    <li <?php if (strpos($_SERVER['REQUEST_URI'], 'emissaodecertificado/Emissao_de_Certificado.php')) echo 'class="ui-state-focus"' ?>>
+        <a href="<?= $CFG->www ?>pg/pessoas/emissaodecertificado/Emissao_de_Certificado.php">Emissão de Certificados</a>
+    </li> 
 </ul>
 
 <?php
-if (isset($_SESSION['usuid'])) {
+if (isset($_SESSION['usuid']) && permite('Gerente')) {
     ?>
     <ul id="menu-adm" style="margin-top: 20px">
         <li <?php if (strpos($_SERVER['REQUEST_URI'], 'cadastroalteracao/Cadastros_e_Alteracoes.php')) echo 'class="ui-state-focus"' ?>>

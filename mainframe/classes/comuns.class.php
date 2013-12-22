@@ -563,11 +563,12 @@ class comuns extends admComuns {
         };
 
         $str.= "</div>
-                                <script>
-                                        $(function(){
-                                                $('.alert-success').delay(2000).fadeOut();
-                                        });
-                                </script>";
+        
+                <script>
+                    $(function(){
+                        $('.alert-success').delay(4000).fadeOut(function (){ this.remove() });
+                    });
+                </script>";
         return $str;
     }
 
@@ -851,12 +852,13 @@ class comuns extends admComuns {
 
                             <div class='span11'>
                                 <label>Pessoas Presentes no Evento</label>
-                                <ul>";
+                                <ul style='list-style-type: none;'>";
 
         $rs = $evnt->getRsPessoasEvento($param->evento);
         while ($o = $rs->FetchNextObject()) {
-            $str.= "                <li>
-                                        $o->NOME <br />
+            $str.= "                <li style='float: left; width: 40%; padding: 5px; text-align: left; background-color: #F5F5F5; margin: 5px;'>
+                                        <b>$o->NOME</b> ($o->NOMER)
+                                        <br />
                                         " . $evnt->getRadioPresenteEvento($param->evento, $o->ID) . "
                                     </li>";
         }
@@ -865,6 +867,7 @@ class comuns extends admComuns {
                             </div>
                         
                             <div class='span11' style='text-align: center;'>
+                                <button class='btn btn-mini btn-info' onclick=\"$('input[type=radio][value=1]', 'form').each(function(){ $(this).attr('checked', true) }); return false;\"><i class='icon icon-plus'></i> Todos</button>
                                 <button class='btn btn-primary'>Marcar Presencas</button>
                             </div>
                         </form>

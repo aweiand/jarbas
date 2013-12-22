@@ -228,7 +228,8 @@ class eventos extends admEventos {
                 $(function(){
                     $('#accordion, .accs').accordion({
                         collapsible: true,
-                        active: false
+                        active: false,
+                        heightStyle: 'content'
                     });
                 })
             </script>";

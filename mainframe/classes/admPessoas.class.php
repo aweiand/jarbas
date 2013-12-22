@@ -139,4 +139,16 @@ class admPessoas extends database {
         echo $json;
     }
 
+    function cancelaInscricaoPessoaEvento($pessoa, $evento){
+        if (parent::command("DELETE FROM inscricoes WHERE pessoa = $pessoa AND evento = $evento")){
+            if (parent::command("DELETE FROM presencas WHERE pessoa = $pessoa AND evento = $evento")){
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
 }
