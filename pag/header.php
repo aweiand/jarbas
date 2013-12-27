@@ -3,7 +3,10 @@ GLOBAL $CFG;
 @session_start();
 ?>
 <div class="imgTopo">
-    <h2>JARBAS</h2>
+    <h2>
+        <img src="<?= $CFG->www ?>assets/imgs/jarbas_p.png" />
+        JARBAS
+    </h2>
     <h5>Sistema de gerenciamento de eventos acadêmicos</h5>
 </div>
 
