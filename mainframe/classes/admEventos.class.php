@@ -26,9 +26,10 @@ class admEventos extends database {
             $id = " = $id ";
         }
 
-        $sql = "SELECT e.*, t.nome as tnome, s.nome snome
+        $sql = "SELECT e.*, t.nome as tnome, s.nome snome, i.nome as inome
                     FROM eventos e 
                 INNER JOIN tipos t ON (e.tipo = t.id)
+                INNER JOIN instituicoes i ON (e.instituicao = i.id)
            LEFT OUTER JOIN salas s ON (e.sala = s.id)
                     WHERE eventopai $id ORDER BY nome ASC";
         return parent::query($sql);
