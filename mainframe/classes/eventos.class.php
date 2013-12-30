@@ -76,7 +76,7 @@ class eventos extends admEventos {
 
                                 <div class='leftFloat' style='text-align: left;'> 
                                     <label for='tipo'>Evento Pai</label>                                                                
-                                    " . parent::getSelectEvento($rs->EVENTOPAI) . "
+                                    " . parent::getSelectEvento($rs->EVENTOPAI, "", "eventopai") . "
                                 </div>
                                 
                                 <div class='leftFloat' style='text-align: left;'> 

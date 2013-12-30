@@ -597,7 +597,7 @@ class utils extends database {
             $str = "<select name='" . $name . "' id='" . $name . "' $extra>";
 
         if (!$cod)
-            $str.= "<option selected='selected'>Selecione um Valor</option>";
+            $str.= "<option selected='selected' value='null'>Selecione um Valor</option>";
         else
             $str.= "<option>Selecione um Valor</option>";
 

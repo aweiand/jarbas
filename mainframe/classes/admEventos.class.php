@@ -44,11 +44,11 @@ class admEventos extends database {
         return parent::seed("eventos", "id");
     }
 
-    function getSelectEvento($id = "", $extra = "") {
+    function getSelectEvento($id = "", $extra = "", $nome = "evento") {
         $uti = new utils();
         $sql = "SELECT * FROM eventos WHERE eventopai IS NULL ORDER BY nome ASC";
 
-        $str = $uti->getSelectDb($id, "eventos", "id", "nome", "evento", parent::query($sql), false, $extra);
+        $str = $uti->getSelectDb($id, "eventos", "id", "nome", $nome, parent::query($sql), false, $extra);
 
         return $str;
     }

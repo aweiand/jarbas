@@ -184,7 +184,7 @@ class impressoes extends database {
                         <tbody>
                             <tr>
                                 <td style=' font-size: 26px; font-family: Arial; color: #000; text-align: justify; padding: 50px;'>
-                                    Certifica-se que <b>$o->NOME</b> participou do <b>$o->NOMER - $oeventos->NOME</b> realizada no local $oeventos->LOCAL no dia ".$uti->formatDateTime($oeventos->INIEVENTO, "data").".
+                                    Certifica-se que <b>$o->NOME</b> participou do(a) <b>$oeventos->NOME</b> realizada no(a) $oeventos->INOME no dia ".$uti->formatDateTime($oeventos->INIEVENTO, "data").".
                                 </td>
                             </tr>
                         </tbody>
