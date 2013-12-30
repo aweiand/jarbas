@@ -22,16 +22,16 @@ class impressoes extends database {
             $inscritos = $evnt->getRsPessoasEvento($o->ID);
             $num = 1;
 
-            $str.=" <h1 style='text-align: center;'>Lista de Presença do Evento - $evento->NOME</h1>
+            $str.=" <h2 style='font-family: Arial; color: #fff; background-color: #3665ab; text-align: center; padding: 10px;'>Lista de Presença do Evento - $evento->NOME</h2>
                     <h5 style='text-align: center;'>
                         " . $uti->formatDateTime($evento->INIEVENTO) . "
                       - " . $uti->formatDateTime($evento->FIMEVENTO) . "
                     </h5>
                     <hr />
-                    <h3>$o->TNOME - $o->NOME</h3>
-                    <table style='width: 100%; text-align: center;'>
+                    <h3 style='font-family: Arial; text-align: center;'>$o->TNOME - $o->NOME</h3>
+                    <table style='font-family: Arial; width: 100%; text-align: center;'>
                         <thead>
-                            <tr>
+                            <tr style='font-family: Arial;'>
                                 <th>
                                     #
                                 </th>
@@ -49,7 +49,7 @@ class impressoes extends database {
                         <tbody>";
 
             while ($ob = $inscritos->FetchNextObject()) {
-                $str.= "    <tr>
+                $str.= "    <tr style='font-family: Arial;'>
                                 <td>
                                     $num
                                 </td>
@@ -92,26 +92,40 @@ class impressoes extends database {
         while ($o = $inscritos->FetchNextObject()) {
             $evento = $evnt->getRsEventosId($param->evento)->FetchObject();
 
-            $str.=" <table style='margin: 0 auto; width: 75%; text-align: center;' border='1'>
+            $str.=" <table style='margin: 0 auto; width: 80%; text-align: center; background-color: #e6e6e6; padding: 0px;' border='0'>
                         <thead>
-                            <tr>
-                                <th colspan='2'>
-                                    <h3>Identificação</h3>
-                                    <h2 style='text-align: center;'>$o->NOMER - $evento->NOME</h2>
+                            <tr style='background-color: #3665ab; padding: 0px;'>
+                                <th colspan='1'>
+                                    <h2 style='font-family: Arial; color: #fff; text-align: center; padding: 50px;'>Identificação</h2>
                                 </th>
                             <tr>
                                 <th>
-                                    Pessoa
+                                    <h4 style='font-family: Arial; color: #000; text-align: justify;'>Evento: $o->NOMER $evento->NOME</h4>
+                                </th>
+                            </tr>
+                            <tr>
+                                <th>
+                                <br />
                                 </th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
                                 <td>
-                                    $o->NOME
+                                    <h2 style='font-family: Arial; color: #000; text-align: justify;'>Nome: <b>$o->NOME</b> </h2>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                <br />
                                 </td>
                             </tr>
                         </tbody>
+                        <tr style='background-color: #3665ab; padding: 0px;'>
+                                <th colspan='1'>
+                                    <h6 style='font-family: Arial; color: #fff; text-align: center; padding: 50px;'>Jarbas Printer</h6>
+                                </th>
+                            <tr>
                     </table>
                     
                     <br />";
@@ -131,11 +145,10 @@ class impressoes extends database {
         $atividades = $evnt->getRsAtividadesId($param->evento);
 
         while ($o = $atividades->FetchNextObject()) {
-            $str.=" <h1 style='text-align: center;'>
+            $str.=" <h1 style='font-family: Arial; color: #fff; background-color: #3665ab; text-align: center; padding: 10px; text-align: center;'>
                         Identificação de Sala
-                        <br />
-                        Evento - $evento->NOME
                     </h1>
+                    <h2 style='font-family: Arial;'> Evento - $evento->NOME </h2>
                     <h5 style='text-align: center;'>
                         " . $uti->formatDateTime($evento->INIEVENTO) . "
                       - " . $uti->formatDateTime($evento->FIMEVENTO) . "
@@ -166,28 +179,17 @@ class impressoes extends database {
             }
 
             while ($o = $inscritos->FetchNextObject()) {
-                $str.=" <h2 style='text-align: center;'>Certificado de Evento</h2>
-                        <table style='margin: 0 auto; width: 100%; text-align: center;'>
-                        <thead>
-                            <tr>
-                                <th colspan='2'>
-                                    <h1 style='text-align: center;'>$o->NOMER - $oeventos->NOME</h1>
-                                </th>
-                            <tr>
-                                <th>
-                                    Pessoa
-                                </th>
-                            </tr>
-                        </thead>
+                $str.=" <h1 style='font-family: Arial; color: #fff; background-color: #3665ab; text-align: center; padding: 50px;'>CERTIFICADO</h1>
+                        <table border='0' style='margin: 250 auto; width: 100%; text-align: center;'>
                         <tbody>
                             <tr>
-                                <td>
-                                    $o->NOME
+                                <td style=' font-size: 26px; font-family: Arial; color: #000; text-align: justify; padding: 50px;'>
+                                    Certifica-se que <b>$o->NOME</b> participou do <b>NOMER - $oeventos->NOME</b> realizada no local XXXXXX no dia XXXXX.
                                 </td>
                             </tr>
                         </tbody>
                     </table>
-                    
+                    <h4 style='font-family: Arial; color: #fff; background-color: #3665ab; text-align: center; padding: 20px;'>Jarbas Certification</h4>
                     <pagebreak />";
             }
         }
