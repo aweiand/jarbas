@@ -179,7 +179,9 @@ class impressoes extends database {
             }
 
             while ($o = $inscritos->FetchNextObject()) {
-                $str.=" <h1 style='font-family: Arial; color: #fff; background-color: #3665ab; text-align: center; padding: 50px;'>CERTIFICADO</h1>
+                $str.=" <h1 style='font-family: Arial; color: #fff; background-color: #3665ab; text-align: center; padding: 50px;'>
+                            ".$evnt->getLogoEvento($param->evento)." CERTIFICADO
+                        </h1>
                         <table border='0' style='margin: 250 auto; width: 100%; text-align: center;'>
                         <tbody>
                             <tr>

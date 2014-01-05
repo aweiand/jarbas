@@ -413,7 +413,7 @@ class pessoas extends admPessoas {
 
                                 <div class='fullCenter'>
                                     <input type='hidden' name='pessoa' id='pessoa' value='{$_SESSION['usuid']}' />
-                                    <button class='btn btn-primary'>Gerar</button>
+                                    <button class='btn btn-primary'>Emitir</button>
                                 </div>
                             </form>
                         </div>

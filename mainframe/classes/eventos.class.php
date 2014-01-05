@@ -188,6 +188,13 @@ class eventos extends admEventos {
         return $str;
     }
 
+    /**
+     * Função que imprime os eventos correntes
+     * @global GLOBAL $CFG
+     * @param String $table
+     * @param Object $param
+     * @return html
+     */
     function todoseventos($table, $param) {
         GLOBAL $CFG;
 
@@ -204,7 +211,9 @@ class eventos extends admEventos {
                         <p>
                             $o->RESUMO
                         </p>
-                        <a class='btn btn-primary' href='$CFG->www/pg/eventos/gradedehorarios/Grade_de_Horarios.php?evento=$o->ID'>Grade de Horários</a>
+                        <a class='btn btn-primary' style='color: #FFF; margin-bottom: 10px;' href='$CFG->www/pg/eventos/gradedehorarios/Grade_de_Horarios.php?evento=$o->ID'>
+                            <i class='icon-calendar'></i> Grade de Horários
+                        </a>
                     <div class='accs'>";
 
             while ($at = $atvd->FetchNextObject()) {
@@ -237,6 +246,13 @@ class eventos extends admEventos {
         return $str;
     }
 
+    /**
+     * Função que imprime a grade de horários
+     * @global GLOBAL $CFG
+     * @param String $table
+     * @param Object $param
+     * @return html
+     */
     function gradedehorarios($table, $param) {
         GLOBAL $CFG;
         $uti = new utils();
@@ -307,6 +323,33 @@ class eventos extends admEventos {
         }
 
         return $str;
+    }
+
+    /**
+     * Função que imprime os eventos em destaque na página inicial
+     * @global GLOBAL $CFG
+     * @return html
+    */
+    function eventosDestaque(){
+        GLOBAL $CFG;
+
+        $str = "";
+
+        $rs = parent::getRsEventosId();
+        while ($o = $rs->FetchNextObject()) {
+            $str.= "<div class='evntDestaque'>
+                        <caption><b>$o->NOME</b></caption>
+                        <p>
+                            ".substr($o->RESUMO, 0, 100)."...
+                        </p>
+                        <a class='btn btn-primary' style='color: #FFF;' 
+                            href='$CFG->www/pg/eventos/gradedehorarios/Grade_de_Horarios.php?evento=$o->ID'>
+                                <i class='icon-calendar'></i> Grade de Horários
+                        </a>
+                    </div>";
+        }
+
+        return $str;        
     }
 
 }

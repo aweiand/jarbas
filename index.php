@@ -50,6 +50,10 @@ GLOBAL $CFG;
                         </div>
                         <div class="ui-menu ui-widget ui-widget-content ui-corner-all" style="float: right; width: 77%; padding: 10px; margin-top: -20px;">
                             <h4 style="text-align: center">Eventos em Destaque</h4>
+                            <?php
+                                $evnt = new eventos();
+                                echo $evnt->eventosDestaque();
+                            ?>
                         </div>                                                
                     </div>
                 </div>

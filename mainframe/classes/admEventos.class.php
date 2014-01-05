@@ -199,4 +199,19 @@ class admEventos extends database {
         return parent::query($sql);
     }
 
+    function getLogoEvento($evento){
+        GLOBAL $CFG;
+
+        $sql = "SELECT logo FROM eventos WHERE id = $evento ";
+        $rs = parent::query($sql)->FetchObject();
+
+        //return "{$CFG->www}/assets/data/$rs->LOGO";
+
+        if (($rs->LOGO != "")){
+            return "<img style='width: 100px;' src='{$CFG->www}/assets/data/$rs->LOGO' />";
+        } else {
+            return "";
+        }
+    }
+
 }
