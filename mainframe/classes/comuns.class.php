@@ -147,7 +147,9 @@ class comuns extends admComuns {
                                 <div class='fullCenter'>
                                     <button class='btn btn-primary'>$btn</button>
                                         &nbsp;&nbsp;&nbsp;&nbsp;
-                                    <button class='btn btn-danger'><i class='icon-warning-sign'></i> Cancelar</button>
+                                    <a class='btn btn-danger' onclick=\"if(confirm('Voce tem certeza que deseja excluir?')) return true; else return false;\" href='{$CFG->affix}{$CFG->lib}actions.php?action=deletaRegistro&table=tipos&id=$param->id'>
+                                        <i class='icon-warning-sign'></i> Excluir
+                                    </a>
                                 </div>
                             </div>
                         </form>
@@ -295,7 +297,9 @@ class comuns extends admComuns {
                                 <div class='fullCenter'>
                                     <button class='btn btn-primary'>$btn</button>
                                         &nbsp;&nbsp;&nbsp;&nbsp;
-                                    <button class='btn btn-danger'><i class='icon-warning-sign'></i> Excluir</button>
+                                    <a class='btn btn-danger' onclick=\"if(confirm('Voce tem certeza que deseja excluir?')) return true; else return false;\" href='{$CFG->affix}{$CFG->lib}actions.php?action=deletaRegistro&table=salas&id=$param->id'>
+                                        <i class='icon-warning-sign'></i> Excluir
+                                    </a>
                                 </div>
                             </div>
                         </form>
@@ -392,7 +396,9 @@ class comuns extends admComuns {
                                 <div class='fullCenter'>
                                     <button class='btn btn-primary'>$btn</button>
                                         &nbsp;&nbsp;&nbsp;&nbsp;
-                                    <button class='btn btn-danger'><i class='icon-warning-sign'></i> Excluir</button>
+                                    <a class='btn btn-danger' onclick=\"if(confirm('Voce tem certeza que deseja excluir?')) return true; else return false;\" href='{$CFG->affix}{$CFG->lib}actions.php?action=deletaRegistro&table=instituicoes&id=$param->id'>
+                                        <i class='icon-warning-sign'></i> Excluir
+                                    </a>
                                 </div>
                             </div>
                         </form>

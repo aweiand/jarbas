@@ -90,10 +90,15 @@ class admEventos extends database {
     }
 
     function getBotaoInscricao($evnt) {
-        if (parent::query("SELECT pessoa FROM inscricoes WHERE pessoa = {$_SESSION['usuid']} AND evento = $evnt")->RecordCount() == 0) {
-            $str = "<button class='btn btn-primary' onclick='inscreverNoEvento({$_SESSION['usuid']}, $evnt)'>Inscrever-me</button>";
+        $evento = $this->getRsEventosId($evnt);
+        if (@date("Y-m-d") < $evento->Fields("fimevento")){
+            if (parent::query("SELECT pessoa FROM inscricoes WHERE pessoa = {$_SESSION['usuid']} AND evento = $evnt")->RecordCount() == 0) {
+                $str = "<button class='btn btn-primary' onclick='inscreverNoEvento({$_SESSION['usuid']}, $evnt)'>Inscrever-me</button>";
+            } else {
+                $str = "<span class='label label-success'>Já Inscrito</span>";
+            }
         } else {
-            $str = "<span class='label label-success'>Já Inscrito</span>";
+            $str = "<span class='label label-info'>Evento Encerrado</span>";
         }
 
         return $str;
