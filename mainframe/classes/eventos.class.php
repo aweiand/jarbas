@@ -293,6 +293,8 @@ class eventos extends admEventos {
             while ($o = $rs->FetchNextObject()) {
                 if (isset($_SESSION['usuid'])) {
                     $insc = parent::getBotaoInscricao($o->ID);
+                } elseif (@date("Y-m-d") < $o->FIMEVENTO) {
+                    $insc = "<span class='label label-warning'>Inscrições Encerradas</span>";
                 } else {
                     $insc = "<a href='{$CFG->www}home.php' class='label label-warning' style='color: white'>Inscreva-se!</span>";
                 }

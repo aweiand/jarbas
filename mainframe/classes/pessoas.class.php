@@ -87,7 +87,9 @@ class pessoas extends admPessoas {
                                 <div class='fullCenter'>
                                     <button class='btn btn-primary'>$btn</button>
                                             &nbsp;&nbsp;&nbsp;&nbsp;
-                                    <button class='btn btn-danger'><i class='icon-warning-sign'></i> Excluir</button>
+                                    <a class='btn btn-danger' onclick=\"if(confirm('Voce tem certeza que deseja excluir?')) return true; else return false;\" href='{$CFG->affix}{$CFG->lib}actions.php?action=deletaRegistro&table=pessoas&id=$param->id'>
+                                        <i class='icon-warning-sign'></i> Excluir
+                                    </a>
                                 </div>
                             </div>
                         </form>
@@ -166,7 +168,9 @@ class pessoas extends admPessoas {
                                 <div class='fullCenter'>
                                     <button class='btn btn-primary'>$btn</button>
                                         &nbsp;&nbsp;&nbsp;&nbsp;
-                                    <button class='btn btn-danger'><i class='icon-warning-sign'></i> Excluir</button>
+                                    <a class='btn btn-danger' onclick=\"if(confirm('Voce tem certeza que deseja excluir?')) return true; else return false;\" href='{$CFG->affix}{$CFG->lib}actions.php?action=deletaRegistro&table=regras&id=$param->id'>
+                                        <i class='icon-warning-sign'></i> Excluir
+                                    </a>
                                 </div>
                             </div>
                         </form>
@@ -299,7 +303,7 @@ class pessoas extends admPessoas {
                                             <label>CPF</label>
                                         </td>
                                         <td>
-                                            <input type='text' name='cpf' id='cpf' value='$rs->CPF' />
+                                            <input type='text' name='cpf' id='cpf' value='$rs->CPF' maxlength='11'/>
                                         </td>
                                     </tr>
                                     <tr>
@@ -307,7 +311,7 @@ class pessoas extends admPessoas {
                                             <label>Login</label>
                                         </td>
                                         <td>
-                                            <input type='text' name='login' id='login' value='$rs->LOGIN' />
+                                            <input type='text' name='login' id='login' value='$rs->LOGIN' required/>
                                         </td>
                                     </tr>
                                     <tr>
@@ -315,7 +319,7 @@ class pessoas extends admPessoas {
                                             <label>Senha</label>
                                         </td>
                                         <td>
-                                            <input type='password' name='senha' id='senha' value='$rs->SENHA' />
+                                            <input type='password' name='senha' id='senha' value='$rs->SENHA' required/>
                                         </td>
                                     </tr>
                                     <tr>

@@ -92,6 +92,15 @@ if (isset($_GET['action'])) {
                 }
             } break;
 
+        case "deletaRegistro" : {
+                if ($db->command("DELETE FROM {$_GET['table']} WHERE id = {$_GET['id']}")) {
+                    header("Location: jarbas/$retorno?mens=OK");
+                } else {
+                    header("Location: jarbas/$retorno?err=error");
+                }
+                exit();
+        } break;
+
     }
 }
 
